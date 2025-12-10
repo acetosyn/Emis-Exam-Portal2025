@@ -503,16 +503,34 @@
 }
 
 /* ============================================================
-   PASS / FAIL BADGES
+   PASS / FAIL BADGES — OVERRIDDEN & SCOPED FOR RESULTS TABLE
 ============================================================ */
-.status-pass {
-    color: #16a34a;
-    font-weight: 700;
+.results-table-panel .status-pass {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    background: #dcfce7 !important;
+    color: #166534 !important;
+    padding: 4px 12px !important;
+    border-radius: 999px !important;
+    border: 1px solid #86efac !important;
+    font-weight: 800 !important;
+    font-size: 0.78rem !important;
+    white-space: nowrap !important;
 }
 
-.status-fail {
-    color: #dc2626;
-    font-weight: 700;
+.results-table-panel .status-fail {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    background: #fee2e2 !important;
+    color: #b91c1c !important;
+    padding: 4px 12px !important;
+    border-radius: 999px !important;
+    border: 1px solid #fecaca !important;
+    font-weight: 800 !important;
+    font-size: 0.78rem !important;
+    white-space: nowrap !important;
 }
 
 
@@ -543,10 +561,9 @@
 
 
 
-
-
-
-
+/* ============================================================
+   CLEAR FILTER BUTTON
+============================================================ */
 .clear-filters-wrapper {
     text-align: right;
     margin-bottom: 0.5rem;
@@ -567,4 +584,54 @@
 .btn-clear-filters:hover {
     background: #fde68a;
     transform: translateY(-2px);
+}
+
+
+
+/* ============================================================
+   PREMIUM BADGE SCORE STYLING — SCOPED & OVERRIDDEN
+============================================================ */
+.results-table-panel .score-badges {
+    display: flex !important;
+    align-items: center !important;
+    gap: 8px !important;
+}
+
+/* Percentage Badge (Blue) */
+.results-table-panel .badge-percent {
+    background: #1e3a8a !important;
+    color: #fff !important;
+    padding: 4px 12px !important;
+    border-radius: 999px !important;
+    font-weight: 800 !important;
+    font-size: 0.78rem !important;
+    letter-spacing: 0.3px !important;
+    box-shadow: 0 2px 6px rgba(30, 58, 138, 0.25) !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    white-space: nowrap !important;
+}
+
+/* Separator Dot */
+.results-table-panel .badge-separator {
+    color: #334155 !important;
+    font-size: 1rem !important;
+    font-weight: 900 !important;
+    opacity: 0.6 !important;
+}
+
+/* Raw Score Badge (Grey Soft) */
+.results-table-panel .badge-raw {
+    background: #f1f5f9 !important;
+    color: #334155 !important;
+    padding: 4px 12px !important;
+    border-radius: 999px !important;
+    font-weight: 700 !important;
+    font-size: 0.78rem !important;
+    border: 1px solid #e2e8f0 !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    white-space: nowrap !important;
 }

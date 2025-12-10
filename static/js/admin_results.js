@@ -128,7 +128,10 @@ async function loadResults() {
 }
 
 /* ============================================================================
-   RENDER TABLE — UNCHANGED
+   RENDER TABLE — FULL PREMIUM BADGE SYSTEM
+============================================================================ */
+/* ============================================================================
+   RENDER TABLE — PREMIUM BADGES + EXCELLENCE + HOVER ANIM
 ============================================================================ */
 function renderTable() {
     if (!FILTERED.length) {
@@ -140,23 +143,84 @@ function renderTable() {
     const start = (CURRENT_PAGE - 1) * ROWS_PER_PAGE;
     const rows  = FILTERED.slice(start, start + ROWS_PER_PAGE);
 
-    resultsBody.innerHTML = rows.map((row, i) => `
-        <tr class="fade-row">
+    resultsBody.innerHTML = rows.map((row, i) => {
+        // -------------------------------
+        // SCORE: % + RAW + EXCELLENCE
+        // -------------------------------
+        const percentRaw = row["Score (%)"] || "--";
+        const numericPercent = parseInt(
+            String(percentRaw).replace("%", "").trim() || "0",
+            10
+        );
+
+        const correct = row["Correct"] !== undefined ? row["Correct"] : "";
+        const total   = row["Total"]   !== undefined ? row["Total"]   : "";
+
+        const rawBadge = (correct !== "" && total !== "")
+            ? `<span class="badge-raw">${correct}/${total}</span>`
+            : `<span class="badge-raw">--/--</span>`;
+
+        // Excellence badge for >= 80%
+        const excellenceBadge = numericPercent >= 80
+            ? `<span class="badge-excellence">★ Excellent</span>`
+            : "";
+
+        // -------------------------------
+        // CLASS + SUBJECT SOFT BADGES
+        // -------------------------------
+        const classLabel   = row["Class"]   || "";
+        const subjectLabel = row["Subject"] || "";
+
+        const classCell   = classLabel
+            ? `<span class="badge-soft">${classLabel}</span>`
+            : "";
+        const subjectCell = subjectLabel
+            ? `<span class="badge-soft">${subjectLabel}</span>`
+            : "";
+
+        // -------------------------------
+        // STATUS PILL (PASS / FAIL)
+        // -------------------------------
+        const isPass      = String(row["Status"]).toUpperCase() === "PASS";
+        const statusClass = isPass ? "status-pill status-pass" : "status-pill status-fail";
+        const statusIcon  = isPass ? "✔" : "✖";
+        const statusText  = row["Status"] || (isPass ? "PASS" : "FAIL");
+
+        return `
+        <tr class="fade-row results-row">
             <td><input type="checkbox" class="row-check"></td>
-            <td>${row["Student Name"]}</td>
-            <td>${row["Admission No"]}</td>
-            <td>${row["Class"]}</td>
-            <td>${row["Subject"]}</td>
-            <td>${row["Score (%)"]}</td>
-            <td class="${row["Status"] === "PASS" ? "status-pass" : "status-fail"}">${row["Status"]}</td>
-            <td>${row["Submitted At"]}</td>
+            <td>${row["Student Name"] || ""}</td>
+            <td>${row["Admission No"] || ""}</td>
+
+            <td>${classCell}</td>
+            <td>${subjectCell}</td>
+
+            <td>
+                <div class="score-badges">
+                    <span class="badge-percent">${percentRaw}</span>
+                    <span class="badge-separator">•</span>
+                    ${rawBadge}
+                    ${excellenceBadge}
+                </div>
+            </td>
+
+            <td>
+                <span class="${statusClass}">
+                    <span class="status-icon">${statusIcon}</span>
+                    <span class="status-label">${statusText}</span>
+                </span>
+            </td>
+
+            <td>${row["Submitted At"] || ""}</td>
+
             <td>
                 <button class="btn-light small view-btn" data-index="${start + i}">
                     <i class="fa-solid fa-eye"></i> View
                 </button>
             </td>
         </tr>
-    `).join("");
+        `;
+    }).join("");
 
     renderPagination();
 }
@@ -325,7 +389,7 @@ document.getElementById("exportCsvBtn").addEventListener("click", () => {
 });
 
 /* ============================================================================
-   SUMMARY FILLER — FINAL VERSION WITH TIME TAKEN FIX (2025)
+   SUMMARY FILLER — Updated with % + Raw Score (2025 Premium)
 ============================================================================ */
 function fillSummary(i) {
     const row = FILTERED[i];
@@ -339,34 +403,35 @@ function fillSummary(i) {
 
     document.getElementById("ap_subject").textContent = row["Subject"];
 
-    // Score / Correct / Total
+    // -----------------------------
+    // SCORE LOGIC
+    // -----------------------------
+    const percent = row["Score (%)"] || "--";
+
     const correct = parseInt(row["Correct"] || 0);
     const total   = parseInt(row["Total"] || 0);
+    const raw     = total ? `${correct} / ${total}` : "--";
 
-    const raw = total ? `${correct} / ${total}` : (row["Score (%)"] || "--");
-
+    document.getElementById("ap_percent").textContent  = percent;
     document.getElementById("ap_rawScore").textContent = raw;
-    document.getElementById("ap_correct").textContent  = correct;
-    document.getElementById("ap_total").textContent    = total;
 
-    // Accuracy %
+    document.getElementById("ap_correct").textContent = correct;
+    document.getElementById("ap_total").textContent   = total;
+
+    // Accuracy
     document.getElementById("ap_accuracy").textContent =
         total > 0 ? `${Math.round((correct / total) * 100)}%` : "0%";
 
-    /* ============================================================================
-       TIME TAKEN — READ FROM EITHER:
-       - SQLite     → "time_taken"
-       - Excel new  → "Time Taken"
-       - Excel old  → missing → show "--"
-    ============================================================================ */
+    // -----------------------------
+    // TIME TAKEN (SAFE VERSION)
+    // -----------------------------
     let timeTaken = row["time_taken"];
 
     if (timeTaken === undefined || timeTaken === null || timeTaken === "") {
-        timeTaken = row["Time Taken"];  // Excel column
+        timeTaken = row["Time Taken"];  // Excel column fallback
     }
 
-    // If still missing, show "--"
-    const formattedTime = 
+    const formattedTime =
         (timeTaken !== undefined && timeTaken !== null && timeTaken !== "")
             ? formatTimeAdmin(timeTaken)
             : "--";
@@ -377,6 +442,7 @@ function fillSummary(i) {
     document.getElementById("ap_status").textContent = row["Status"];
     document.getElementById("ap_date").textContent   = row["Submitted At"];
 }
+
 
 
 /* ============================================================================
@@ -435,10 +501,14 @@ document.getElementById("summaryOverlay").addEventListener("click", () => {
 /* ============================================================================
    PRINT SUMMARY — UNCHANGED
 ============================================================================ */
+/* ============================================================================
+   PRINT SUMMARY — Updated to include % + Raw Score
+============================================================================ */
 function printAdminSummary(i) {
     const row = FILTERED[i];
     if (!row) return;
 
+    // Basic fields
     document.getElementById("ap_studentName").textContent   = row["Student Name"] || "--";
     document.getElementById("ap_studentID").textContent     = row["Admission No"] || "--";
     document.getElementById("ap_studentClass").textContent  = row["Class"] || "--";
@@ -446,20 +516,29 @@ function printAdminSummary(i) {
 
     document.getElementById("ap_subject").textContent = row["Subject"] || "--";
 
+    // -----------------------------
+    // SCORE LOGIC (PRINT MODE)
+    // -----------------------------
+    const percent = row["Score (%)"] || "--";
+
     const correct  = parseInt(row["Correct"] || 0);
     const total    = parseInt(row["Total"] || 0);
-    const rawScore = total > 0 ? `${correct} / ${total}` : (row["Score (%)"] || "--");
+    const rawScore = total > 0 ? `${correct} / ${total}` : "--";
 
+    document.getElementById("ap_percent").textContent  = percent;
     document.getElementById("ap_rawScore").textContent = rawScore;
-    document.getElementById("ap_correct").textContent  = correct;
-    document.getElementById("ap_total").textContent    = total;
+
+    document.getElementById("ap_correct").textContent = correct;
+    document.getElementById("ap_total").textContent   = total;
+
     document.getElementById("ap_accuracy").textContent =
         total > 0 ? Math.round((correct / total) * 100) + "%" : "0%";
 
-    document.getElementById("ap_time").textContent   = "--";
+    document.getElementById("ap_time").textContent   = "--";  // print version
     document.getElementById("ap_status").textContent = row["Status"] || "--";
     document.getElementById("ap_date").textContent   = row["Submitted At"] || "--";
 
+    // Show print modal
     const block = document.getElementById("adminPrintSummary");
     block.classList.remove("show-summary");
     block.style.display = "block";
@@ -469,6 +548,7 @@ function printAdminSummary(i) {
     setTimeout(() => { block.style.display = "none"; }, 200);
 }
 window.printAdminSummary = printAdminSummary;
+
 
 /* ============================================================================
    PRINT SELECTED — UNCHANGED

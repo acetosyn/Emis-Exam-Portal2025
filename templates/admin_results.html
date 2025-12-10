@@ -97,35 +97,6 @@
 
 
     <!-- --------------------------------------------------------
-         ANALYTICS PANEL
-    --------------------------------------------------------- -->
-    <section class="analytics-panel glass-card">
-        <div class="analytics-grid">
-            <div class="analytics-item">
-                <h3>Total Results</h3>
-                <p id="statTotalResults">0</p>
-            </div>
-
-            <div class="analytics-item">
-                <h3>Pass Rate</h3>
-                <p id="statPassRate">0%</p>
-            </div>
-
-            <div class="analytics-item">
-                <h3>Average Score</h3>
-                <p id="statAvgScore">0%</p>
-            </div>
-
-            <div class="analytics-item">
-                <h3>Subjects Loaded</h3>
-                <p id="statSubjects">0</p>
-            </div>
-        </div>
-    </section>
-
-
-
-    <!-- --------------------------------------------------------
          TOOLBAR — Export / Print / Delete / Refresh
     --------------------------------------------------------- -->
     <section class="toolbar-panel glass-card">
@@ -169,39 +140,73 @@
 
 
     <!-- --------------------------------------------------------
-         RESULTS TABLE
+     RESULTS TABLE — UPDATED WITH BADGES & ICONS
+--------------------------------------------------------- -->
+<section class="results-table-panel glass-card">
+
+    <div class="table-wrapper">
+        <table class="results-table">
+            <thead>
+                <tr>
+                    <th><input type="checkbox" id="selectAllRows"></th>
+                    <th>Student</th>
+                    <th>Admission</th>
+                    <th>Class</th>
+                    <th>Subject</th>
+                    <th>Score</th>
+                    <th>Status</th>
+                    <th>Date</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+
+            <tbody id="resultsBody">
+
+                <!-- Placeholder until data loads -->
+                <tr>
+                    <td colspan="9" class="table-placeholder">
+                        Select Year, Class, and Subject to view results
+                    </td>
+                </tr>
+
+            </tbody>
+        </table>
+    </div>
+
+    <div id="pagination" class="pagination"></div>
+
+</section>
+
+
+
+    <!-- --------------------------------------------------------
+         ANALYTICS PANEL
     --------------------------------------------------------- -->
-    <section class="results-table-panel glass-card">
+    <section class="analytics-panel glass-card">
+        <div class="analytics-grid">
+            <div class="analytics-item">
+                <h3>Total Results</h3>
+                <p id="statTotalResults">0</p>
+            </div>
 
-        <div class="table-wrapper">
-            <table class="results-table">
-                <thead>
-                    <tr>
-                        <th><input type="checkbox" id="selectAllRows"></th>
-                        <th>Student</th>
-                        <th>Admission</th>
-                        <th>Class</th>
-                        <th>Subject</th>
-                        <th>Score</th>
-                        <th>Status</th>
-                        <th>Date</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
+            <div class="analytics-item">
+                <h3>Pass Rate</h3>
+                <p id="statPassRate">0%</p>
+            </div>
 
-                <tbody id="resultsBody">
-                    <tr>
-                        <td colspan="9" class="table-placeholder">
-                            Select Year, Class, and Subject to view results
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
+            <div class="analytics-item">
+                <h3>Average Score</h3>
+                <p id="statAvgScore">0%</p>
+            </div>
+
+            <div class="analytics-item">
+                <h3>Subjects Loaded</h3>
+                <p id="statSubjects">0</p>
+            </div>
         </div>
-
-        <div id="pagination" class="pagination"></div>
-
     </section>
+
+
 
 
 
@@ -250,7 +255,11 @@
 
     <div class="summary-section">
         <p><strong>Subject:</strong> <span id="ap_subject"></span></p>
-        <p><strong>Score:</strong> <span id="ap_rawScore"></span></p>
+
+        <!-- ⭐ NEW: Percentage + Raw Score -->
+        <p><strong>Score (%):</strong> <span id="ap_percent"></span></p>
+        <p><strong>Raw Score:</strong> <span id="ap_rawScore"></span></p>
+
         <p><strong>Correct:</strong> <span id="ap_correct"></span></p>
         <p><strong>Total Questions:</strong> <span id="ap_total"></span></p>
         <p><strong>Accuracy:</strong> <span id="ap_accuracy"></span></p>
@@ -266,6 +275,7 @@
     </div>
 
 </div>
+
 
 
 {% endblock %}
