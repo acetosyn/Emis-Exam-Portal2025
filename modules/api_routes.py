@@ -213,3 +213,67 @@ def delete_excel_results():
     df.to_excel(excel_path, index=False)
 
     return jsonify({"status": "ok", "message": "Records deleted successfully"})
+
+
+
+
+# ============================================================
+# 8️⃣ GLOBAL SEARCH — Admission No + Student Name (ANY YEAR)
+# ============================================================
+@api_bp.route("/api/results/search_admission")
+def search_admission():
+    if not can_view_results():
+        return jsonify({"error": "Unauthorized"}), 403
+
+    q = request.args.get("q", "").strip().lower()
+
+    if len(q) < 2:
+        return jsonify({"results": []})
+
+    matches = []
+
+    for year_folder in RESULTS_DIR.iterdir():
+        if not year_folder.is_dir():
+            continue
+
+        year = year_folder.name
+        class_root = year_folder / "CLASS"
+
+        if not class_root.exists():
+            continue
+
+        for class_folder in class_root.iterdir():
+            if not class_folder.is_dir():
+                continue
+
+            class_cat = class_folder.name
+
+            for subject_folder in class_folder.iterdir():
+                if not subject_folder.is_dir():
+                    continue
+
+                subject = subject_folder.name
+                excel_path = subject_folder / "results.xlsx"
+
+                if not excel_path.exists():
+                    continue
+
+                import pandas as pd
+                try:
+                    df = pd.read_excel(excel_path)
+                except Exception:
+                    continue
+
+                for _, row in df.iterrows():
+                    admission = str(row.get("Admission No", "")).strip().lower()
+                    name = str(row.get("Student Name", "")).strip().lower()
+
+                    # ⭐ Match: admission, first name, last name, or partial
+                    if q in admission or q in name:
+                        row_dict = {k: (v if pd.notna(v) else "") for k, v in row.items()}
+                        row_dict["Year"] = year
+                        row_dict["Class"] = class_cat
+                        row_dict["Subject"] = subject
+                        matches.append(row_dict)
+
+    return jsonify({"results": matches})

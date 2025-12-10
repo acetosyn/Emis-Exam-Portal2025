@@ -248,17 +248,69 @@ function gotoPage(pg) {
 }
 
 /* ============================================================================
-   SEARCH FILTER — UNCHANGED
+   LIVE SEARCH (LOCAL + GLOBAL SERVER SEARCH FOR ADMISSION NUMBERS)
 ============================================================================ */
-searchBox.addEventListener("input", () => {
-    const q = searchBox.value.toLowerCase();
+searchBox.addEventListener("input", async () => {
+    const q = searchBox.value.toLowerCase().trim();
 
-    FILTERED = RESULTS.filter(r =>
-        Object.values(r).some(v => String(v).toLowerCase().includes(q))
-    );
+    // ------------------------------------------------------------
+    // EMPTY SEARCH → RESTORE CURRENTLY LOADED RESULTS
+    // ------------------------------------------------------------
+    if (q === "") {
+        FILTERED = [...RESULTS];
+        CURRENT_PAGE = 1;
+        renderTable();
+        updateAnalytics();
+        return;
+    }
 
-    CURRENT_PAGE = 1;
-    renderTable();
+    // ------------------------------------------------------------
+    // GLOBAL SERVER SEARCH → When typing admission numbers (≥3 chars)
+    // ------------------------------------------------------------
+    if (q.length >= 3) {
+        showShimmer();
+
+        try {
+            const res = await fetch(`/api/results/search_admission?q=${encodeURIComponent(q)}`);
+            const data = await res.json();
+
+            RESULTS  = data.results || [];
+            FILTERED = [...RESULTS];
+            CURRENT_PAGE = 1;
+
+            renderTable();
+            updateAnalytics();
+            return;
+        }
+        catch (err) {
+            console.error("Global search error:", err);
+            resultsBody.innerHTML =
+                `<tr><td colspan="9" class="no-data">Error searching results</td></tr>`;
+            return;
+        }
+    }
+
+    // ------------------------------------------------------------
+    // LOCAL FILTER (for short queries < 3 characters)
+    // Only runs if RESULTS already loaded
+    // ------------------------------------------------------------
+    if (RESULTS.length) {
+        FILTERED = RESULTS.filter(r => {
+            return (
+                String(r["Student Name"] || "").toLowerCase().includes(q) ||
+                String(r["Admission No"] || "").toLowerCase().includes(q) ||
+                String(r["Class"] || "").toLowerCase().includes(q) ||
+                String(r["Subject"] || "").toLowerCase().includes(q) ||
+                String(r["Score (%)"] || "").toLowerCase().includes(q) ||
+                String(r["Correct"] || "").toLowerCase().includes(q) ||
+                String(r["Total"] || "").toLowerCase().includes(q) ||
+                String(r["Status"] || "").toLowerCase().includes(q)
+            );
+        });
+
+        CURRENT_PAGE = 1;
+        renderTable();
+    }
 });
 
 /* ============================================================================
