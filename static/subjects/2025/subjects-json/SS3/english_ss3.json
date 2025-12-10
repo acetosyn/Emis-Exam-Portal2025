@@ -1,0 +1,406 @@
+{
+  "subject": "English Language",
+  "class": "SS3",
+  "session": "2025/2026",
+  "time_allowed_minutes": 60,
+  "questions": [
+
+    {
+      "id": 1,
+      "isInstruction": true,
+      "question": "SECTION 1:\nChoose the option (A–D) that is most nearly OPPOSITE in meaning to the underlined word or group of words, and correctly fills the gap.",
+      "options": [],
+      "diagram": null
+    },
+
+    {
+      "id": 2,
+      "question": "Many youths migrate to <span class=\"focus-word\">urban</span> areas as there are not enough jobs in ___________________ areas.",
+      "options": ["A. bush", "B. local", "C. rural", "D. underdeveloped"],
+      "correctOption": "C",
+      "diagram": null
+    },
+
+    {
+      "id": 3,
+      "question": "It is surprising that Ngozi is <span class=\"focus-word\">non-chalant</span> about her studies, while her younger brother Obinna is __________________________.",
+      "options": ["A. smart", "B. serious", "C. brave", "D. intelligent"],
+      "correctOption": "B",
+      "diagram": null
+    },
+
+    {
+      "id": 4,
+      "question": "The politician gave an <span class=\"focus-word\">equivocal</span> answer rather than a____________________________one.",
+      "options": ["A. pleasing", "B. clear", "C. carefree", "D. confusing"],
+      "correctOption": "B",
+      "diagram": null
+    },
+
+    {
+      "id": 5,
+      "question": "The drug <span class=\"focus-word\">exacerbated</span> his illness rather than____________________________it.",
+      "options": ["A. cure", "B. lessen", "C. aggravate", "D. solve"],
+      "correctOption": "B",
+      "diagram": null
+    },
+
+    {
+      "id": 6,
+      "question": "I prefer <span class=\"focus-word\">extroverts</span> to ______.",
+      "options": ["A. bullies", "B. rascals", "C. extremists", "D. introverts"],
+      "correctOption": "D",
+      "diagram": null
+    },
+
+    {
+      "id": 7,
+      "question": "Cooperation <span class=\"focus-word\">facilitates</span> an action rather than____________________________it.",
+      "options": ["A. retards", "B. quickens", "C. stops", "D. hastens"],
+      "correctOption": "A",
+      "diagram": null
+    },
+
+    {
+      "id": 8,
+      "question": "As a result of a family <span class=\"focus-word\">feud</span>, Bisi and Ayo could not cultivate good ______.",
+      "options": ["A. relationship", "B. companionship", "C. acquaintanceship", "D. friendship"],
+      "correctOption": "A",
+      "diagram": null
+    },
+
+    {
+      "id": 9,
+      "question": "It is no use being in a <span class=\"focus-word\">fret</span>; try to ______.",
+      "options": ["A. play", "B. dance", "C. relax", "D. laugh"],
+      "correctOption": "C",
+      "diagram": null
+    },
+
+    {
+      "id": 10,
+      "question": "Joy needs talking to, not ______.",
+      "options": ["A. flogging", "B. pampering", "C. scolding", "D. laughing at"],
+      "correctOption": "C",
+      "diagram": null
+    },
+
+    {
+      "id": 11,
+      "question": "Ema keeps to herself and does not <span class=\"focus-word\">socialize</span> much.",
+      "options": ["A. laugh", "B. care", "C. quarrel", "D. socialize"],
+      "correctOption": "D",
+      "diagram": null
+    },
+
+
+
+    {
+      "id": 12,
+      "isInstruction": true,
+      "question": "SECTION 2:\nChoose the option (A–D) that best completes each sentence.",
+      "options": [],
+      "diagram": null
+    },
+
+    {
+      "id": 13,
+      "question": "The principal expressed his <span class=\"focus-word\">indignation</span> at the unruly behaviour of the students.",
+      "options": ["A. indignity", "B. indiscretion", "C. indignation", "D. indiscipline"],
+      "correctOption": "C"
+    },
+
+    {
+      "id": 14,
+      "question": "The magistrate <span class=\"focus-word\">sentenced</span> the accused to one year imprisonment.",
+      "options": ["A. sentenced", "B. pronounced", "C. condemned", "D. charged"],
+      "correctOption": "A"
+    },
+
+    {
+      "id": 15,
+      "question": "I hate discussing with Fred. He is always <span class=\"focus-word\">gibberish</span>.",
+      "options": ["A. notorious", "B. giddy", "C. gibberish", "D. juxtaposing"],
+      "correctOption": "C"
+    },
+
+    {
+      "id": 16,
+      "question": "The lecturer condemned his ideas as <span class=\"focus-word\">nebulous</span>.",
+      "options": ["A. unsoothing", "B. unpleasing", "C. unrewarding", "D. nebulous"],
+      "correctOption": "D"
+    },
+
+    {
+      "id": 17,
+      "question": "With determination, we shall <span class=\"focus-word\">surmount</span> the problem.",
+      "options": ["A. surmount", "B. subsume", "C. surprise", "D. surcharge"],
+      "correctOption": "A"
+    },
+
+    {
+      "id": 18,
+      "question": "Bimbo ran <span class=\"focus-word\">into</span> her old friend.",
+      "options": ["A. upon", "B. into", "C. across", "D. unto"],
+      "correctOption": "B"
+    },
+
+    {
+      "id": 19,
+      "question": "The young lady is such a <span class=\"focus-word\">ravishing</span> beauty to behold.",
+      "options": ["A. ravenous", "B. ravishing", "C. ravaging", "D. raging"],
+      "correctOption": "B"
+    },
+
+    {
+      "id": 20,
+      "question": "After his election, the government took over the <span class=\"focus-word\">reins</span> of power.",
+      "options": ["A. realms", "B. reigns", "C. reins", "D. rains"],
+      "correctOption": "C"
+    },
+
+    {
+      "id": 21,
+      "question": "The visit of the president to the players boosted their <span class=\"focus-word\">morale</span>.",
+      "options": ["A. morale", "B. performance", "C. action", "D. play"],
+      "correctOption": "A"
+    },
+
+    {
+      "id": 22,
+      "question": "It is time we <span class=\"focus-word\">drove away</span> the intruders from our school.",
+      "options": ["A. drove away", "B. drive away", "C. shall drive away", "D. should drive away"],
+      "correctOption": "A"
+    },
+
+
+
+    {
+      "id": 23,
+      "isInstruction": true,
+      "question": "SECTION 3:\nChoose the interpretation that best explains the meaning of each sentence.",
+      "options": [],
+      "diagram": null
+    },
+
+    {
+      "id": 24,
+      "question": "She put up an <span class=\"focus-word\">appearance</span> despite all opposition. This means she:",
+      "options": ["A. came and was opposed", "B. came with opposition", "C. came even though forces opposed it", "D. appeared but there were oppositions"],
+      "correctOption": "C"
+    },
+
+    {
+      "id": 25,
+      "question": "Our arrival took her <span class=\"focus-word\">unaware</span>. This means she was:",
+      "options": ["A. prepared", "B. unprepared", "C. shocked", "D. pleased"],
+      "correctOption": "B"
+    },
+
+    {
+      "id": 26,
+      "question": "Jona was advised to stop crying over <span class=\"focus-word\">spilt milk</span>. This means he should stop:",
+      "options": ["A. worrying over what has no remedy", "B. weeping over wasted milk", "C. crying because milk spoiled", "D. worrying over milk poured away"],
+      "correctOption": "A"
+    },
+
+    {
+      "id": 27,
+      "question": "The plan to give the villages a borehole did not <span class=\"focus-word\">materialize</span>. This means:",
+      "options": ["A. was not successful", "B. lacked materials", "C. displeased villagers", "D. was not well carried out"],
+      "correctOption": "A"
+    },
+
+    {
+      "id": 28,
+      "question": "Mother advised us not to fish in <span class=\"focus-word\">troubled waters</span>. This means:",
+      "options": ["A. avoid polluted water", "B. avoid fishing in the rain", "C. not fish when there is trouble", "D. stay away from trouble"],
+      "correctOption": "D"
+    },
+
+    {
+      "id": 29,
+      "question": "He was reminded that those who live in <span class=\"focus-word\">glass houses</span> should not throw stones. This means he:",
+      "options": ["A. should not throw stones at glass houses", "B. should not accuse others of faults he is guilty of", "C. should not throw stones from his glass house", "D. was reminded stones could damage his house"],
+      "correctOption": "B"
+    },
+
+    {
+      "id": 30,
+      "question": "I received a <span class=\"focus-word\">priceless</span> gift. This means it was:",
+      "options": ["A. highly valued", "B. worthless", "C. valueless", "D. without a price tag"],
+      "correctOption": "A"
+    },
+
+    {
+      "id": 31,
+      "question": "Supporters were in <span class=\"focus-word\">full cry</span>. This means they:",
+      "options": ["A. were crying", "B. enjoyed themselves fully", "C. shouted enthusiastically", "D. shed tears"],
+      "correctOption": "C"
+    },
+
+    {
+      "id": 32,
+      "question": "The quarrel turned out to be a <span class=\"focus-word\">storm in a teapot</span>. This means it:",
+      "options": ["A. was over an unimportant issue", "B. increased anger", "C. concerned a dirty teapot", "D. was inflamed by people"],
+      "correctOption": "A"
+    },
+
+    {
+      "id": 33,
+      "question": "Workers were given the <span class=\"focus-word\">marching orders</span>. This means they were:",
+      "options": ["A. told to march", "B. given instructions", "C. dismissed", "D. told to do a march past"],
+      "correctOption": "C"
+    },
+
+
+
+    {
+      "id": 34,
+      "isInstruction": true,
+      "question": "SECTION 4:\nChoose the word nearest in meaning to the underlined word.",
+      "options": [],
+      "diagram": null
+    },
+
+    {
+      "id": 35,
+      "question": "Nnenna was sweating <span class=\"focus-word\">profusely</span>.",
+      "options": ["A. excessively", "B. recklessly", "C. apologetically", "D. greatly"],
+      "correctOption": "A"
+    },
+
+    {
+      "id": 36,
+      "question": "Emmanuel is <span class=\"focus-word\">genuinely</span> interested in Jane.",
+      "options": ["A. stubbornly", "B. questionably", "C. probably", "D. truly"],
+      "correctOption": "D"
+    },
+
+    {
+      "id": 37,
+      "question": "She was cautioned not to <span class=\"focus-word\">deviate</span> from the main issue.",
+      "options": ["A. run away", "B. derail", "C. stand out", "D. attack"],
+      "correctOption": "B"
+    },
+
+    {
+      "id": 38,
+      "question": "Life is <span class=\"focus-word\">ephemeral</span>.",
+      "options": ["A. transient", "B. sweet", "C. fulfilling", "D. glorious"],
+      "correctOption": "A"
+    },
+
+    {
+      "id": 39,
+      "question": "Ada rarely <span class=\"focus-word\">disobeys</span> her seniors.",
+      "options": ["A. often", "B. seldom", "C. frequently", "D. stubbornly"],
+      "correctOption": "B"
+    },
+
+    {
+      "id": 40,
+      "question": "The use of <span class=\"focus-word\">vernacular</span> was prohibited.",
+      "options": ["A. mother tongue", "B. foreign language", "C. second language", "D. strange language"],
+      "correctOption": "A"
+    },
+
+    {
+      "id": 41,
+      "question": "The teacher’s <span class=\"focus-word\">nefarious</span> activities led to his dismissal.",
+      "options": ["A. mischievous", "B. unprecedented", "C. wicked", "D. planless"],
+      "correctOption": "C"
+    },
+
+    {
+      "id": 42,
+      "question": "It was a <span class=\"focus-word\">tortuous</span> way of negotiating peace.",
+      "options": ["A. argumentative", "B. frustrating", "C. disappointing", "D. complicated and difficult"],
+      "correctOption": "D"
+    },
+
+    {
+      "id": 43,
+      "question": "The reporter refused to <span class=\"focus-word\">divulge</span> the source.",
+      "options": ["A. share", "B. disclose", "C. discuss", "D. write"],
+      "correctOption": "B"
+    },
+
+    {
+      "id": 44,
+      "question": "She is a <span class=\"focus-word\">garrulous</span> young woman.",
+      "options": ["A. beautiful", "B. happy", "C. chic", "D. talkative"],
+      "correctOption": "D"
+    },
+
+
+
+    {
+      "id": 45,
+      "isInstruction": true,
+      "question": "SECTION 5:\nChoose the option (A–D) that best completes each sentence.",
+      "options": [],
+      "diagram": null
+    },
+
+    { "id": 46, "question": "You have not done the work ______.", "options": ["A. isn’t it?", "B. do you?", "C. have you?", "D. is it?"], "correctOption": "C" },
+    { "id": 47, "question": "I searched for it in all the____________________________of the room.", "options": ["A. nooks and corner", "B. nooks and crannies", "C. nooks and corners", "D. corners and crannies"], "correctOption": "B" },
+    { "id": 48, "question": "He arrived just____________________________time to catch the plane.", "options": ["A. on", "B. at", "C. in", "D. after"], "correctOption": "C" },
+    { "id": 49, "question": "It is high time you____________________________me the bully.", "options": ["A. show", "B. showed", "C. will show", "D. are showing"], "correctOption": "B" },
+    { "id": 50, "question": "The principal with some teachers____________________________in the hall.", "options": ["A. are", "B. is", "C. were", "D. have been"], "correctOption": "B" },
+    { "id": 51, "question": "Bola is one of the girls who____________________________the classroom every morning.", "options": ["A. would sweep", "B. sweeps", "C. sweep", "D. has swept"], "correctOption": "C" },
+    { "id": 52, "question": "With the scolding, she retired____________________________her shell.", "options": ["A. unto", "B. into", "C. from", "D. under"], "correctOption": "B" },
+    { "id": 53, "question": "Once bitten, twice ______.", "options": ["A. embarrassed", "B. furious", "C. stubborn", "D. shy"], "correctOption": "D" },
+    { "id": 54, "question": "He stood____________________________the rain for two hours.", "options": ["A. in", "B. under", "C. outside", "D. inside"], "correctOption": "A" },
+    { "id": 55, "question": "Ugochukwu is good____________________________Mathematics.", "options": ["A. on", "B. in", "C. at", "D. upon"], "correctOption": "C" },
+    { "id": 56, "question": "Kunle is a chip____________________________the old block.", "options": ["A. of", "B. off", "C. on", "D. at"], "correctOption": "B" },
+    { "id": 57, "question": "We live in a____________________________building.", "options": ["A. two-stories", "B. two-story", "C. two-storey", "D. two-storied"], "correctOption": "C" },
+    { "id": 58, "question": "That artist is really good____________________________his hands.", "options": ["A. with", "B. on", "C. at", "D. in"], "correctOption": "A" },
+    { "id": 59, "question": "The plane will touch____________________________in ten minutes.", "options": ["A. in", "B. up", "C. under", "D. down"], "correctOption": "D" },
+    { "id": 60, "question": "She was operated____________________________at the Catholic hospital.", "options": ["A. for", "B. in", "C. on", "D. into"], "correctOption": "C" },
+    { "id": 61, "question": "The accused was____________________________to two years jail term.", "options": ["A. sentenced", "B. condemned", "C. punished", "D. put"], "correctOption": "A" },
+    { "id": 62, "question": "Abubakar is taller than ______.", "options": ["A. her", "B. she", "C. them", "D. him"], "correctOption": "B" },
+    { "id": 63, "question": "In____________________________account was the money deposited?", "options": ["A. who’s", "B. whom", "C. whose", "D. whom’s"], "correctOption": "C" },
+    { "id": 64, "question": "Ifeoma passed her examinations ______.", "options": ["A. in flying colours", "B. under flying colours", "C. into flying colours", "D. with flying colours"], "correctOption": "D" },
+    { "id": 65, "question": "Yusuf and Kunle went fishing today, ______?", "options": ["A. isn’t it?", "B. didn’t they?", "C. haven’t they?", "D. hadn’t they?"], "correctOption": "B" },
+    { "id": 66, "question": "Neither Idiat nor Kafayat____________________________here.", "options": ["A. is", "B. are", "C. has been", "D. have been"], "correctOption": "A" },
+    { "id": 67, "question": "I am tired of____________________________unending complaints.", "options": ["A. there", "B. there are", "C. their", "D. they’re"], "correctOption": "C" },
+    { "id": 68, "question": "The two boys were abusing ______.", "options": ["A. one another", "B. themselves", "C. each other", "D. theirselves"], "correctOption": "C" },
+    { "id": 69, "question": "I’m____________________________sincerely, Emeka.", "options": ["A. your’s", "B. yours’", "C. your", "D. yours"], "correctOption": "D" },
+    { "id": 70, "question": "The secret is between ______.", "options": ["A. you and me", "B. you and I", "C. me and you", "D. I and you"], "correctOption": "A" },
+    { "id": 71, "question": "He turned____________________________my peace offer.", "options": ["A. off", "B. down", "C. out", "D. in"], "correctOption": "B" },
+    { "id": 72, "question": "Give me the biro____________________________mine.", "options": ["A. its", "B. it’s", "C. its’", "D. it"], "correctOption": "D" },
+    { "id": 73, "question": "______________________________his apology, he was punished.", "options": ["A. However", "B. As a result of", "C. Despite", "D. Notwithstanding"], "correctOption": "C" },
+    { "id": 74, "question": "The price of ready-made dresses____________________________gone up.", "options": ["A. have", "B. has", "C. are", "D. were"], "correctOption": "B" },
+    { "id": 75, "question": "I prefer oranges____________________________bananas.", "options": ["A. to", "B. than", "C. more to", "D. more than"], "correctOption": "A" },
+
+
+
+    {
+      "id": 76,
+      "isInstruction": true,
+      "question": "SECTION 6:\nChoose the most appropriate option (A–D) to fill each numbered gap in the passage.",
+      "options": [],
+      "diagram": null
+    },
+
+    {
+      "id": 77,
+      "passage": "The Stock Exchange is very important in the economy of a country and that of an individual. The Stock Exchange deals with the buying and —71— of long-term —72— financial assets known as —73—. The —74— is an agent who buys and sells securities on behalf of his clients. On every transaction he undertakes, he charges —75—. When one buys the shares of a company, one becomes a —76—. Under normal circumstances, every year the company —77— a profit. This is shared among the shareholders as —78—. Many times a —79— buys shares in a company hoping to sell them later. This is very risky as the company may declare —80—.",
+      "question": "71.",
+      "options": ["A. trading", "B. selling", "C. disposing", "D. purchasing"],
+      "correctOption": "B"
+    },
+
+    { "id": 78, "question": "72.", "options": ["A. securities", "B. bonds", "C. currencies", "D. dividends"], "correctOption": "A" },
+    { "id": 79, "question": "73.", "options": ["A. bonds", "B. profits", "C. deals", "D. shares"], "correctOption": "D" },
+    { "id": 80, "question": "74.", "options": ["A. stockman", "B. sharesman", "C. stockbroker", "D. exchange man"], "correctOption": "C" },
+    { "id": 81, "question": "75.", "options": ["A. interest", "B. commission", "C. money", "D. profit"], "correctOption": "B" },
+    { "id": 82, "question": "76.", "options": ["A. shareholder", "B. manager", "C. director", "D. co-owner"], "correctOption": "A" },
+    { "id": 83, "question": "77.", "options": ["A. makes", "B. announces", "C. declares", "D. gives"], "correctOption": "A" },
+    { "id": 84, "question": "78.", "options": ["A. gains", "B. dividends", "C. interest", "D. bonuses"], "correctOption": "B" },
+    { "id": 85, "question": "79.", "options": ["A. a client", "B. a buyer", "C. a speculator", "D. an investor"], "correctOption": "C" },
+    { "id": 86, "question": "80.", "options": ["A. liquidation", "B. shortage", "C. loss", "D. bankruptcy"], "correctOption": "C" }
+
+  ]
+}
