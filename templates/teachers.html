@@ -87,11 +87,13 @@
 
 
 
-    <!-- === Results Related Tools === -->
-    <div class="module-item green" data-page="dash_results.html">
-      <i class="fa-solid fa-chart-bar"></i>
-      View Results
-    </div>
+   <!-- === Results === -->
+<div class="module-item green"
+     onclick="window.location.href='{{ url_for('admin_bp.admin_results') }}'">
+  <i class="fa-solid fa-chart-bar"></i>
+  <span>Results</span>
+</div>
+
 
     <div class="module-item yellow" data-page="export_results.html">
       <i class="fa-solid fa-file-excel"></i>
