@@ -6,6 +6,11 @@
   <title>Exam Dashboard | EMIS</title>
 
   <meta name="exam-year" content="{{ year }}">
+  <meta name="student-name" content="{{ student.full_name }}">
+  <meta name="student-admission" content="{{ student.admission_number }}">
+  <meta name="student-class" content="{{ student.class }}">
+  <meta name="student-subject" content="{{ subject }}">
+
 
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
   <link rel="stylesheet" href="{{ url_for('static', filename='css/students.css') }}"/>

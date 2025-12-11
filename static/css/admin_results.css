@@ -637,3 +637,180 @@
 }
 
 
+
+/* ============================================================================
+   EMIS NOTIFICATIONS — NAVY BLUE + GOLD PREMIUM THEME (2025)
+   Luxury UI · High Contrast · Extremely Readable · Beautiful Animations
+============================================================================ */
+
+/* ------------------------------------------------------------
+   ROW holding the two cards
+------------------------------------------------------------- */
+.emis-notifications-row {
+  width: 100%;
+  display: flex;
+  gap: 18px;
+  margin-bottom: 1.8rem;
+  padding-right: 6px;
+}
+
+/* ------------------------------------------------------------
+   OUTER CARD (Porcelain White — best contrast for navy)
+------------------------------------------------------------- */
+.emis-notif-card {
+  width: 360px;
+  background: #f3f4f6; /* light grey */
+/* soft porcelain white (not pure white) */
+  border-radius: 14px;
+  padding: 14px 16px;
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.07);
+  color: #0f172a;
+}
+
+
+/* ------------------------------------------------------------
+   HEADER — White + Gold
+------------------------------------------------------------- */
+.emis-notif-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.emis-notif-header h3 {
+  font-size: 1rem;
+  font-weight: 900;
+  color: #f80606;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.emis-notif-header h3 i {
+  color: #fbbf24;      /* gold accent */
+  font-size: 1.05rem;
+}
+
+/* ------------------------------------------------------------
+   LIST AREA
+------------------------------------------------------------- */
+.emis-notif-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  max-height: 240px;
+  overflow-y: auto;
+}
+
+.emis-notif-list::-webkit-scrollbar {
+  width: 4px;
+}
+.emis-notif-list::-webkit-scrollbar-thumb {
+  background: rgba(255,255,255,0.25);
+  border-radius: 8px;
+}
+
+/* ------------------------------------------------------------
+   EMPTY STATE
+------------------------------------------------------------- */
+.emis-notif-empty {
+  text-align: center;
+  padding: 14px 0;
+  font-size: 0.8rem;
+  color: #cbd5e1;
+}
+
+.emis-notif-empty i {
+  opacity: 0.5;
+  font-size: 1.1rem;
+  color: #fbbf24;
+}
+
+/* ------------------------------------------------------------
+   NOTIFICATION ITEM
+   Navy Teal Card · White Text · Gold Accent
+------------------------------------------------------------- */
+.emis-notif-item {
+  display: flex;
+  gap: 12px;
+  padding: 10px 12px;
+  background: #172a46; /* lighter navy */
+  border-radius: 10px;
+  border-left: 3px solid transparent;
+  margin-bottom: 10px;
+
+  transition:
+    transform 0.18s ease,
+    box-shadow 0.18s ease,
+    background-color 0.18s ease;
+}
+
+/* Subtle hover */
+.emis-notif-item:hover {
+  transform: translateY(-2px);
+  background: #1e3356;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.28);
+}
+
+/* ------------------------------------------------------------
+   ICON BUBBLE — GOLD
+------------------------------------------------------------- */
+.notif-icon {
+  width: 28px;
+  height: 28px;
+  border-radius: 999px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(251,191,36,0.2);
+  color: #fbbf24; /* gold */
+  font-size: 0.85rem;
+}
+
+/* ------------------------------------------------------------
+   TEXT — PREMIUM WHITE
+------------------------------------------------------------- */
+.notif-main {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.28;
+}
+
+.notif-main strong {
+  font-size: 0.82rem;
+  font-weight: 800;
+  color: #ffffff;      /* pure white */
+}
+
+.notif-sub {
+  font-size: 0.74rem;
+  color: #e5e7eb;      /* light gray */
+  font-weight: 500;
+}
+
+.notif-meta {
+  margin-top: 2px;
+  font-size: 0.67rem;
+  color: #cbd5e1;       /* slate gray */
+}
+
+/* ------------------------------------------------------------
+   NEW ITEM ANIMATION — GOLD SLIDE IN
+------------------------------------------------------------- */
+.emis-notif-item.is-new {
+  border-left-color: #fbbf24; /* gold */
+  background: #1e3356;
+  animation: notifSlideIn 0.32s ease-out;
+}
+
+@keyframes notifSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

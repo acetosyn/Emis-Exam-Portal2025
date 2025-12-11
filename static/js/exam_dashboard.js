@@ -99,36 +99,65 @@ document.addEventListener("DOMContentLoaded", () => {
     }, 350);
   }
 
+// -----------------------------------------------------------
+// 5. EXAM START VALIDATION + MODAL LOGIC + NOTIFICATION
+// -----------------------------------------------------------
+const openExamModal = document.getElementById("openExamModal");
+const examStartModal = document.getElementById("examStartModal");
+const closeExamModal = document.getElementById("closeExamModal");
 
-  // -----------------------------------------------------------
-  // 5. EXAM START VALIDATION + MODAL LOGIC
-  // -----------------------------------------------------------
-  const openExamModal = document.getElementById("openExamModal");
-  const examStartModal = document.getElementById("examStartModal");
-  const closeExamModal = document.getElementById("closeExamModal");
+// Read student data from meta tags
+const metaStudentName     = document.querySelector('meta[name="student-name"]')?.content || "";
+const metaAdmissionNumber = document.querySelector('meta[name="student-admission"]')?.content || "";
+const metaStudentClass    = document.querySelector('meta[name="student-class"]')?.content || "";
+const metaSubject         = document.querySelector('meta[name="student-subject"]')?.content || "";
+const metaYear            = document.querySelector('meta[name="exam-year"]')?.content || "";
 
-  openExamModal?.addEventListener("click", () => {
+openExamModal?.addEventListener("click", async () => {
 
-    if (!examAvailable) {
-      flash("❌ This exam is not available. Contact your teacher or admin.", "red");
-      return;
-    }
+  if (!examAvailable) {
+    flash("❌ This exam is not available. Contact your teacher or admin.", "red");
+    return;
+  }
 
-    flash("✔ Loading exam…", "green");
+  flash("✔ Loading exam…", "green");
 
-    setTimeout(() => {
-      examStartModal?.classList.remove("hidden");
-    }, 700);
-  });
+  // -----------------------------------------------------
+  // 🔔 REAL-TIME NOTIFICATION: Exam Start Trigger
+  // -----------------------------------------------------
+  try {
+    console.log("[notify] Sending exam_start notification…");
 
-  closeExamModal?.addEventListener("click", () => {
-    examStartModal?.classList.add("hidden");
-  });
+    await fetch("/api/notifications/notify/exam_start", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        student_name:     metaStudentName,
+        admission_number: metaAdmissionNumber,
+        class_category:   metaStudentClass,
+        subject:          metaSubject,
+        year:             metaYear
+      })
+    });
 
-  examStartModal?.addEventListener("click", (e) => {
-    if (e.target === examStartModal) {
-      examStartModal.classList.add("hidden");
-    }
-  });
+  } catch (err) {
+    console.error("❌ Exam start notification failed:", err);
+  }
 
+  // Open the modal after short delay
+  setTimeout(() => {
+    examStartModal?.classList.remove("hidden");
+  }, 700);
+});
+
+// Close modal buttons
+closeExamModal?.addEventListener("click", () => {
+  examStartModal?.classList.add("hidden");
+});
+
+examStartModal?.addEventListener("click", (e) => {
+  if (e.target === examStartModal) {
+    examStartModal.classList.add("hidden");
+  }
+});
 });

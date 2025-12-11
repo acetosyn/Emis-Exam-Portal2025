@@ -396,7 +396,7 @@ window.closeEndExam = () => {
 };
 
 // ------------------------------------------------------
-// SUBMIT EXAM — uses ONLY real questions
+// SUBMIT EXAM — now sends RAW SCORE for notifications
 // ------------------------------------------------------
 window.submitExam = async function (timeUp = false) {
   if (window.__examFinished) return;
@@ -405,40 +405,69 @@ window.submitExam = async function (timeUp = false) {
   if (window.examTimer) clearInterval(window.examTimer);
 
   const realIndices = window.realQuestionIndices;
-  const total       = realIndices.length;
+  const total = realIndices.length;
 
   let correct = 0;
 
   realIndices.forEach((trueIndex) => {
-    const q  = window.examData.questions[trueIndex];
+    const q = window.examData.questions[trueIndex];
     const ua = window.userAnswers[trueIndex];
-
-    if (ua && ua.index === q.correctIndex) {
-      correct++;
-    }
+    if (ua && ua.index === q.correctIndex) correct++;
   });
 
   const answered  = realIndices.filter(i => !!window.userAnswers[i]).length;
   const incorrect = total - correct;
   const skipped   = total - answered;
 
+  // ⭐ RAW SCORE (NO PERCENT)
+  const rawScore = correct;
+
   const payload = {
     subject: $('meta[name="exam-subject"]').content.trim().toUpperCase(),
-    score:   total ? Math.round((correct / total) * 100) : 0,
+    score: rawScore,  // RAW SCORE HERE
     correct,
     incorrect,
     total,
     answered,
     skipped,
-    flagged:     window.flaggedQuestions.size,
+    flagged: window.flaggedQuestions.size,
     tabSwitches: window.__TAB_STRIKES || 0,
-    time_taken:  window.examStartTime
+    time_taken: window.examStartTime
       ? Math.round((Date.now() - window.examStartTime) / 1000)
       : 0,
     submittedAt: new Date().toISOString(),
-    status:      timeUp ? "timeout" : "completed"
+    status: timeUp ? "timeout" : "completed"
   };
 
+  // ---------------------------------------------
+  // 🔔 SEND REAL-TIME NOTIFICATION: Exam End
+  // ---------------------------------------------
+  try {
+    const notifyBody = {
+      student_name: document.querySelector('meta[name="student-name"]')?.content || "",
+      admission_number: document.querySelector('meta[name="student-admission"]')?.content || "",
+      class_category: document.querySelector('meta[name="student-class"]')?.content || "",
+      subject: payload.subject,
+      score: rawScore,      // RAW SCORE!
+      total_questions: total,
+      year: document.querySelector('meta[name="exam-year"]')?.content || "",
+      submitted_at: payload.submittedAt,
+      status: payload.status
+    };
+
+    await fetch("/api/notifications/notify/exam_end", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(notifyBody)
+    });
+
+  } catch (err) {
+    console.error("❌ Failed to send exam_end notification:", err);
+  }
+
+  // ---------------------------------------------
+  // 🔵 NORMAL SUBMISSION TO FLASK
+  // ---------------------------------------------
   await fetch("/submit_exam", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -447,6 +476,7 @@ window.submitExam = async function (timeUp = false) {
 
   location.replace("/result");
 };
+
 
 // ------------------------------------------------------
 // LOAD SINGLE QUESTION  (REAL QUESTION NUMBERING + SECTION CARD)

@@ -9,21 +9,67 @@
 
 <div class="results-wrapper fade-in">
 
-    <!-- --------------------------------------------------------
-         TOP HEADER + SUBTITLE
-    --------------------------------------------------------- -->
-    <section class="header-panel">
-        <div class="hp-left">
-            <h1 class="hp-title">
-                <i class="fa-solid fa-chart-pie"></i> Results Management Console
-            </h1>
-            <p class="hp-sub">Filter • Analyze • Export • Print</p>
-        </div>
+ <style>
+  /* Pull notifications closer to the header */
+  .emis-notifications-row {
+      margin-top: -10px;
+  }
+</style>
 
-        <div class="hp-right">
-            <div class="hp-badge">Admin Mode</div>
-        </div>
+<!-- ============================================================
+     LIVE NOTIFICATIONS PANELS — EMIS REAL-TIME ACTIVITY
+============================================================ -->
+<section class="emis-notifications-row">
+
+    <!-- LOGIN NOTIFICATIONS -->
+    <section class="emis-notif-card" id="loginNotifCard">
+        <header class="emis-notif-header">
+            <h3><i class="fa-solid fa-bell"></i> Login Notifications</h3>
+        </header>
+
+        <ul class="emis-notif-list" id="loginNotifList">
+            <li class="emis-notif-empty">
+                <i class="fa-solid fa-bell-slash"></i>
+                <p>No logins yet</p>
+                <span>Student login activity will appear here in real-time.</span>
+            </li>
+        </ul>
     </section>
+
+    <!-- EXAM NOTIFICATIONS -->
+    <section class="emis-notif-card" id="examNotifCard">
+        <header class="emis-notif-header">
+            <h3><i class="fa-solid fa-clipboard-check"></i> Exam Activity</h3>
+        </header>
+
+        <ul class="emis-notif-list" id="examNotifList">
+            <li class="emis-notif-empty">
+                <i class="fa-solid fa-bell-slash"></i>
+                <p>No exam activity yet</p>
+                <span>Exam start and submission actions will show here in real-time.</span>
+            </li>
+        </ul>
+    </section>
+
+</section>
+
+
+
+<!-- --------------------------------------------------------
+     TOP HEADER + SUBTITLE
+--------------------------------------------------------- -->
+<section class="header-panel">
+    <div class="hp-left">
+        <h1 class="hp-title">
+            <i class="fa-solid fa-chart-pie"></i> Results Management Console
+        </h1>
+        <p class="hp-sub">Filter • Analyze • Export • Print</p>
+    </div>
+
+    <div class="hp-right">
+        <div class="hp-badge">Admin Mode</div>
+    </div>
+</section>
 
 
 
@@ -282,4 +328,5 @@
 
 {% block scripts %}
 <script src="{{ url_for('static', filename='js/admin_results.js') }}"></script>
+<script src="{{ url_for('static', filename='js/admin_notifications.js') }}"></script>
 {% endblock %}

@@ -14,6 +14,7 @@ from modules.document_routes import document_bp
 from uploads import uploads_bp
 from push import push_bp
 from modules import student_results
+from modules.notifications import notifications_bp
 
 
 # Other system modules
@@ -35,6 +36,8 @@ app.register_blueprint(api_bp)
 app.register_blueprint(document_bp)
 app.register_blueprint(uploads_bp)
 app.register_blueprint(push_bp, url_prefix="/api")
+app.register_blueprint(notifications_bp, url_prefix="/api/notifications")
+
 
 
 ADMIN_USERNAME = os.getenv("ADMIN_USERNAME")
