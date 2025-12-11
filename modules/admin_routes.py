@@ -7,6 +7,9 @@ import csv
 from datetime import datetime
 import user_credentials
 import user_exam
+from engine import delete_teacher_from_db
+
+
 
 admin_bp = Blueprint('admin_bp', __name__)
 
@@ -71,6 +74,7 @@ def admin_login():
     return render_template('admin_login.html')
 
 
+
 # ==========================================================
 # 🧩 TEACHER ID GENERATION (Admin Only)
 # ==========================================================
@@ -95,6 +99,16 @@ def generate_teacher_ids_api():
     except Exception as e:
         print("⚠️ Error generating IDs:", e)
         return jsonify({"error": str(e)}), 500
+
+
+@admin_bp.route("/delete_teacher_id/<int:teacher_id>", methods=["DELETE"])
+@admin_only
+def delete_teacher_id(teacher_id):
+    try:
+        success = delete_teacher_from_db(teacher_id)
+        return jsonify({"success": success})
+    except Exception as e:
+        return jsonify({"success": False, "error": str(e)}), 500
 
 
 # ==========================================================

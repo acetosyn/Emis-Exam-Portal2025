@@ -152,3 +152,18 @@ def validate_teacher_login(teacher_id, password):
             WHERE teacher_id=? AND password=? AND status='active'
         """, (teacher_id.strip(), password.strip()))
         return c.fetchone() is not None
+
+
+
+
+# -------------------------------
+# DELETE TEACHER BY ID
+# -------------------------------
+def delete_teacher_from_db(row_id: int):
+    """Delete teacher record by SQLite row ID."""
+    init_teacher_table()
+    with sqlite3.connect(DB_PATH) as conn:
+        c = conn.cursor()
+        c.execute("DELETE FROM teachers WHERE id = ?", (row_id,))
+        conn.commit()
+        return c.rowcount > 0  # True if deleted, False if not found

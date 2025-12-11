@@ -1,227 +1,325 @@
-/* ==========================================================
-   EMIS ID MANAGEMENT — ids.js (v6.0)
+/* ============================================================================
+   EMIS ID MANAGEMENT — FULL SYSTEM (v8.0 Stable)
    ----------------------------------------------------------
-   Handles:
-   ✅ Supabase (Students)
-   ✅ Flask Backend (Teachers)
-   ✅ Modal Options (Generate One / Multiple)
-   ✅ CSV Export, Search, and Render Logic
-========================================================== */
+   Students:
+   ✔ Load SS_Students.csv
+   ✔ Modal viewer + search
+
+   Teachers:
+   ✔ Load teacher IDs from backend
+   ✔ Generate (one/multiple)
+   ✔ View all teacher IDs
+   ✔ Suspend/Delete (future)
+   ✔ CSV Export
+============================================================================ */
 
 document.addEventListener("DOMContentLoaded", async () => {
 
-  // -------------------------------
-  // INIT SUPABASE (for students)
-  // -------------------------------
-  const supabaseUrl = "https://YOUR_SUPABASE_URL.supabase.co";
-  const supabaseKey = "YOUR_SUPABASE_ANON_KEY";
-  const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
+  /* -------------------------------------------------------
+     ELEMENT REFERENCES — STUDENTS
+  ------------------------------------------------------- */
+  const studentIdModal = document.getElementById("studentIdModal");
+  const closeStudentIdModal = document.getElementById("closeStudentIdModal");
+  const studentSearchInput = document.getElementById("studentSearchInput");
+  const studentList = document.getElementById("studentList");
+  const viewStudentIdsBtn = document.getElementById("viewStudentIdsBtn");
 
-  // -------------------------------
-  // ELEMENTS
-  // -------------------------------
-  const studentTableBody = document.getElementById("studentTableBody");
+  /* -------------------------------------------------------
+     ELEMENT REFERENCES — TEACHERS
+  ------------------------------------------------------- */
   const teacherTableBody = document.getElementById("teacherTableBody");
-  const studentSection = document.getElementById("studentSection");
-  const teacherSection = document.getElementById("teacherSection");
-  const viewSelector = document.getElementById("viewSelector");
-  const searchBox = document.getElementById("searchBox");
-  const exportBtn = document.getElementById("exportCSVBtn");
 
-  // teacher id modals
+  const viewTeacherIdsBtn = document.getElementById("viewTeacherIdsBtn");
+  const viewTeacherIdsTile = document.getElementById("viewTeacherIds");
+
+  // NEW ENTRY POINT → Purple "Generate IDs" tile
+  const openTeacherGenerator = document.getElementById("openTeacherGenerator");
+
+  // Header button
+  const generateTeacherBtn = document.getElementById("generateTeacherBtn");
+
+  // Modals
+  const teacherIdModal = document.getElementById("teacherIdModal");
+  const closeTeacherIdModal = document.getElementById("closeTeacherIdModal");
+  const teacherIdResults = document.getElementById("teacherIdResults");
+  const downloadTeacherCSV = document.getElementById("downloadTeacherCSV");
+  const refreshTeacherList = document.getElementById("refreshTeacherList");
+
   const teacherOptionsModal = document.getElementById("teacherOptionsModal");
   const closeTeacherOptionsModal = document.getElementById("closeTeacherOptionsModal");
   const generateOneTeacherBtn = document.getElementById("generateOneTeacherBtn");
   const openGenerateMultipleBtn = document.getElementById("openGenerateMultipleBtn");
 
-  const generateTeacherBtn = document.getElementById("generateTeacherBtn");
-  const generateModal = document.getElementById("generateTeacherModal");
-  const cancelGenerateBtn = document.getElementById("cancelGenerateBtn");
+  const generateTeacherModal = document.getElementById("generateTeacherModal");
   const closeGenerateModal = document.getElementById("closeGenerateModal");
-  const generateForm = document.getElementById("generateTeacherForm");
+  const cancelGenerateBtn = document.getElementById("cancelGenerateBtn");
+  const generateTeacherForm = document.getElementById("generateTeacherForm");
 
-  const teacherIdModal = document.getElementById("teacherIdModal");
-  const closeTeacherIdModal = document.getElementById("closeTeacherIdModal");
-  const viewTeacherIdsBtn = document.getElementById("viewTeacherIdsBtn");
-  const viewTeacherIdsTile = document.getElementById("viewTeacherIds");
-  const teacherIdResults = document.getElementById("teacherIdResults");
-  const downloadTeacherCSV = document.getElementById("downloadTeacherCSV");
-  const refreshTeacherList = document.getElementById("refreshTeacherList");
+  const totalTeachers = document.getElementById("totalTeachers");
+  const lastGenerated = document.getElementById("lastGenerated");
+  const lastSync = document.getElementById("lastSync");
 
-  // -------------------------------
-  // STUDENTS — SUPABASE
-  // -------------------------------
-  async function loadStudents() {
-    try {
-      const { data, error } = await supabase.from("students").select("*").order("student_id");
-      if (error) throw error;
-      renderStudents(data);
-      document.getElementById("totalStudents").textContent = data.length;
-    } catch (err) {
-      console.error("❌ Error loading students:", err);
-    }
-  }
+  /* -------------------------------------------------------
+     DATA STORAGE
+  ------------------------------------------------------- */
+  let STUDENTS = [];
+  let TEACHERS = [];
 
-  function renderStudents(students) {
-    studentTableBody.innerHTML = "";
-    students.forEach(st => {
-      const tr = document.createElement("tr");
-      tr.innerHTML = `
-        <td>${st.student_id}</td>
-        <td>${st.full_name}</td>
-        <td>${st.class || "--"}</td>
-        <td>${new Date(st.created_at).toLocaleDateString()}</td>
-      `;
-      studentTableBody.appendChild(tr);
+  /* -------------------------------------------------------
+     CSV PARSER FOR STUDENTS
+  ------------------------------------------------------- */
+  function parseCSV(csvText) {
+    const lines = csvText.trim().split("\n");
+    const headers = lines[0].split(",");
+
+    return lines.slice(1).map(line => {
+      const cols = line.split(",");
+      const obj = {};
+      headers.forEach((h, i) => {
+        obj[h.trim()] = cols[i] ? cols[i].trim() : "";
+      });
+      return obj;
     });
   }
 
-  // -------------------------------
-  // TEACHERS — BACKEND (Flask)
-  // -------------------------------
+  async function loadCSVStudents() {
+    try {
+      const res = await fetch("/static/ids/SS_Students.csv");
+      const text = await res.text();
+      STUDENTS = parseCSV(text);
+      document.getElementById("totalStudents").textContent = STUDENTS.length;
+    } catch (err) {
+      console.error("❌ Failed to load student CSV:", err);
+    }
+  }
+
+  /* -------------------------------------------------------
+     LOGIN NORMALIZATION
+  ------------------------------------------------------- */
+  function normalizeLogin(name) {
+    return name.replace(/\s+/g, "").toLowerCase();
+  }
+
+  /* -------------------------------------------------------
+     RENDER STUDENTS
+  ------------------------------------------------------- */
+  function buildStudentCard(st) {
+    const fullName = [st.First_name, st.Other_names, st.Last_name].filter(Boolean).join(" ");
+    return `
+      <div class="student-card">
+        <div class="avatar">${(st.First_name || "?")[0].toUpperCase()}</div>
+
+        <div class="ml-3">
+          <h4>${fullName}</h4>
+          <p class="detail-line"><strong>ID:</strong> ${st.Admission_number}</p>
+          <p class="detail-line"><strong>Class:</strong> ${st.Class} (${st.Class_category})</p>
+          <p class="detail-line"><strong>Phone:</strong> ${st.Phone || "—"}</p>
+          <p class="login-hint">
+            Login: <span class="login-format">${st.First_name}</span> →
+            <span class="normalized">${normalizeLogin(st.First_name || "")}</span>
+          </p>
+        </div>
+      </div>
+    `;
+  }
+
+  function renderStudents(list) {
+    studentList.innerHTML = "";
+    if (!list.length) {
+      studentList.innerHTML = `<div class="student-empty">No matching students found.</div>`;
+      return;
+    }
+    list.forEach(st => {
+      const card = document.createElement("div");
+      card.innerHTML = buildStudentCard(st);
+      studentList.appendChild(card.firstElementChild);
+    });
+  }
+
+  /* -------------------------------------------------------
+     STUDENT MODAL LOGIC
+  ------------------------------------------------------- */
+  function openStudentModal() {
+    studentIdModal.classList.remove("hidden");
+    studentSearchInput.value = "";
+    renderStudents(STUDENTS);
+  }
+
+  closeStudentIdModal.addEventListener("click", () =>
+    studentIdModal.classList.add("hidden")
+  );
+
+  studentSearchInput.addEventListener("input", e => {
+    const term = e.target.value.toLowerCase();
+    renderStudents(
+      STUDENTS.filter(st =>
+        Object.values(st).join(" ").toLowerCase().includes(term)
+      )
+    );
+  });
+
+  if (viewStudentIdsBtn) viewStudentIdsBtn.addEventListener("click", openStudentModal);
+
+  document.querySelectorAll("[data-action='students']").forEach(tile =>
+    tile.addEventListener("click", openStudentModal)
+  );
+
+  /* -------------------------------------------------------
+     TEACHER DATA LOADING
+  ------------------------------------------------------- */
   async function loadTeachers() {
     try {
       const res = await fetch("/generate_teacher_ids");
       const data = await res.json();
-      if (data.teachers) {
-        renderTeachers(data.teachers);
-        document.getElementById("totalTeachers").textContent = data.teachers.length;
-      }
+      TEACHERS = data.teachers || [];
+
+      totalTeachers.textContent = TEACHERS.length;
+      renderTeacherTable();
+      lastSync.textContent = new Date().toLocaleString();
     } catch (err) {
-      console.error("❌ Error loading teachers:", err);
+      console.error("❌ Failed to load teachers:", err);
     }
   }
 
-  function renderTeachers(teachers) {
+    /* -------------------------------------------------------
+      RENDER TEACHER TABLE
+  ------------------------------------------------------- */
+
+  function renderTeacherTable() {
     teacherTableBody.innerHTML = "";
-    teachers.forEach(tc => {
+
+    TEACHERS.forEach(t => {
       const tr = document.createElement("tr");
       tr.innerHTML = `
-        <td>${tc.teacher_id}</td>
-        <td>${tc.password}</td>
-        <td>${tc.status || "Active"}</td>
-        <td>${new Date(tc.created_at).toLocaleDateString()}</td>
+        <td>${t.teacher_id}</td>
+        <td>${t.password}</td>
+        <td>${t.status || "Active"}</td>
+        <td>${new Date(t.created_at).toLocaleDateString()}</td>
         <td>
-          <div class="table-actions">
-            <button class="action-btn action-suspend" data-id="${tc.id}">
-              <i class="fa-solid fa-ban"></i>
-            </button>
-            <button class="action-btn action-delete" data-id="${tc.id}">
-              <i class="fa-solid fa-trash"></i>
-            </button>
-          </div>
+          <button class="action-btn action-suspend" data-id="${t.id}">
+            <i class="fa-solid fa-ban"></i>
+          </button>
+          <button class="action-btn action-delete" data-id="${t.id}">
+            <i class="fa-solid fa-trash"></i>
+          </button>
         </td>
       `;
       teacherTableBody.appendChild(tr);
     });
   }
 
-  // -------------------------------
-  // TOGGLE VIEW (Students / Teachers)
-  // -------------------------------
-  viewSelector.addEventListener("change", () => {
-    if (viewSelector.value === "students") {
-      teacherSection.classList.add("hidden");
-      studentSection.classList.remove("hidden");
-    } else {
-      studentSection.classList.add("hidden");
-      teacherSection.classList.remove("hidden");
-    }
-  });
 
-  // -------------------------------
-  // TEACHER ID TILE → OPTIONS MODAL
-  // -------------------------------
-  if (viewTeacherIdsTile) {
-    viewTeacherIdsTile.addEventListener("click", () => {
-      teacherOptionsModal.classList.remove("hidden");
-    });
+  /* -------------------------------------------------------
+     OPEN TEACHER OPTIONS MODAL (ALL ENTRY POINTS)
+  ------------------------------------------------------- */
+  function openTeacherOptions() {
+    teacherOptionsModal.classList.remove("hidden");
   }
-  closeTeacherOptionsModal.addEventListener("click", () => teacherOptionsModal.classList.add("hidden"));
 
-  // Generate One ID instantly
+  if (generateTeacherBtn) generateTeacherBtn.addEventListener("click", openTeacherOptions);
+  if (openTeacherGenerator) openTeacherGenerator.addEventListener("click", openTeacherOptions);
+  if (viewTeacherIdsTile) viewTeacherIdsTile.addEventListener("click", openTeacherOptions);
+
+  if (closeTeacherOptionsModal) {
+    closeTeacherOptionsModal.addEventListener("click", () =>
+      teacherOptionsModal.classList.add("hidden")
+    );
+  }
+
+  /* -------------------------------------------------------
+     GENERATE ONE TEACHER ID
+  ------------------------------------------------------- */
   generateOneTeacherBtn.addEventListener("click", async () => {
     try {
-      const formData = new FormData();
-      formData.append("count", 1);
-      const res = await fetch("/generate_teacher_ids", { method: "POST", body: formData });
-      const data = await res.json();
-      if (data.error) return alert("❌ " + data.error);
+      const fd = new FormData();
+      fd.append("count", 1);
 
-      alert("✅ 1 Teacher ID created successfully!");
-      renderTeachers(data.teachers);
+      const res = await fetch("/generate_teacher_ids", { method: "POST", body: fd });
+      const data = await res.json();
+
+      TEACHERS = data.teachers;
+      renderTeacherTable();
+      lastGenerated.textContent = new Date().toLocaleString();
+
       teacherOptionsModal.classList.add("hidden");
       showTeacherIdModal(data.generated);
     } catch (err) {
-      console.error("Error generating single teacher ID:", err);
-      alert("⚠️ Could not generate ID");
+      console.error("❌ Single teacher gen failed:", err);
     }
   });
 
-  // Open Multiple ID modal
+  /* -------------------------------------------------------
+     GENERATE MULTIPLE TEACHERS
+  ------------------------------------------------------- */
   openGenerateMultipleBtn.addEventListener("click", () => {
     teacherOptionsModal.classList.add("hidden");
-    generateModal.classList.remove("hidden");
+    generateTeacherModal.classList.remove("hidden");
   });
 
-  // -------------------------------
-  // GENERATE MULTIPLE TEACHER IDS
-  // -------------------------------
-  generateTeacherBtn.addEventListener("click", () => generateModal.classList.remove("hidden"));
-  cancelGenerateBtn.addEventListener("click", () => generateModal.classList.add("hidden"));
-  closeGenerateModal.addEventListener("click", () => generateModal.classList.add("hidden"));
+  closeGenerateModal.addEventListener("click", () =>
+    generateTeacherModal.classList.add("hidden")
+  );
 
-  generateForm.addEventListener("submit", async (e) => {
+  cancelGenerateBtn.addEventListener("click", () =>
+    generateTeacherModal.classList.add("hidden")
+  );
+
+  generateTeacherForm.addEventListener("submit", async e => {
     e.preventDefault();
-    const num = parseInt(document.getElementById("numTeachers").value);
-    if (!num || num < 1) return alert("⚠️ Enter a valid number (1–100)");
+
+    const n = parseInt(document.getElementById("numTeachers").value);
+    if (!n || n < 1) return alert("Enter valid count");
 
     try {
-      const formData = new FormData();
-      formData.append("count", num);
-      const res = await fetch("/generate_teacher_ids", { method: "POST", body: formData });
+      const fd = new FormData();
+      fd.append("count", n);
+
+      const res = await fetch("/generate_teacher_ids", { method: "POST", body: fd });
       const data = await res.json();
 
-      if (data.error) return alert("❌ " + data.error);
+      TEACHERS = data.teachers;
+      renderTeacherTable();
 
-      alert(`✅ ${data.generated.length} Teacher IDs created successfully!`);
-      renderTeachers(data.teachers);
-      document.getElementById("totalTeachers").textContent = data.teachers.length;
-      generateModal.classList.add("hidden");
+      lastGenerated.textContent = new Date().toLocaleString();
+      generateTeacherModal.classList.add("hidden");
+
       showTeacherIdModal(data.generated);
     } catch (err) {
-      console.error("Error generating multiple IDs:", err);
-      alert("⚠️ Failed to generate IDs");
+      console.error("❌ Multiple teacher gen failed:", err);
     }
   });
 
-  // -------------------------------
-  // VIEW TEACHER ID LIST
-  // -------------------------------
-  if (viewTeacherIdsBtn) {
-    viewTeacherIdsBtn.addEventListener("click", async () => {
-      try {
-        const res = await fetch("/generate_teacher_ids");
-        const data = await res.json();
-        showTeacherIdModal(data.teachers);
-      } catch (err) {
-        console.error("Error fetching teacher IDs:", err);
-        alert("⚠️ Could not load teacher IDs");
-      }
-    });
-  }
+  /* -------------------------------------------------------
+     VIEW TEACHER ID LIST
+  ------------------------------------------------------- */
+  viewTeacherIdsBtn.addEventListener("click", () => {
+    showTeacherIdModal(TEACHERS);
+  });
 
-  closeTeacherIdModal.addEventListener("click", () => teacherIdModal.classList.add("hidden"));
+  closeTeacherIdModal.addEventListener("click", () =>
+    teacherIdModal.classList.add("hidden")
+  );
+
   refreshTeacherList.addEventListener("click", async () => {
     await loadTeachers();
-    alert("🔄 Teacher list refreshed.");
+    alert("🔄 Refreshed!");
   });
-  downloadTeacherCSV.addEventListener("click", () => window.location.href = "/export_teacher_ids");
 
+  downloadTeacherCSV.addEventListener("click", () => {
+    window.location.href = "/export_teacher_ids";
+  });
+
+
+  /* -------------------------------------------------------
+      SHOW TEACHER ID MODAL 
+  ------------------------------------------------------- */
   function showTeacherIdModal(list) {
     teacherIdResults.innerHTML = "";
-    if (!list || !list.length) {
-      teacherIdResults.innerHTML = `<p class="text-center text-gray-500">No teacher IDs found.</p>`;
+
+    if (!list.length) {
+      teacherIdResults.innerHTML = `
+        <p class="text-center text-gray-500">No teacher IDs found</p>
+      `;
     } else {
       list.forEach(tc => {
         const div = document.createElement("div");
@@ -233,37 +331,73 @@ document.addEventListener("DOMContentLoaded", async () => {
         teacherIdResults.appendChild(div);
       });
     }
+
     teacherIdModal.classList.remove("hidden");
   }
 
-  // -------------------------------
-  // SEARCH & EXPORT
-  // -------------------------------
-  searchBox.addEventListener("input", (e) => {
-    const term = e.target.value.toLowerCase();
-    const rows = viewSelector.value === "students"
-      ? studentTableBody.querySelectorAll("tr")
-      : teacherTableBody.querySelectorAll("tr");
-    rows.forEach(row => {
-      row.style.display = row.textContent.toLowerCase().includes(term) ? "" : "none";
-    });
-  });
-
-  exportBtn.addEventListener("click", () => {
-    const rows = Array.from(document.querySelectorAll("table tr"));
-    const csv = rows.map(r => Array.from(r.children).map(td => td.innerText).join(",")).join("\n");
-    const blob = new Blob([csv], { type: "text/csv" });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = "EMIS_IDs.csv";
-    a.click();
-  });
-
-  // -------------------------------
-  // INITIAL LOAD
-  // -------------------------------
-  await loadStudents();
+  /* -------------------------------------------------------
+     INITIAL LOAD
+  ------------------------------------------------------- */
+  await loadCSVStudents();
   await loadTeachers();
-  document.getElementById("lastSync").textContent = new Date().toLocaleString();
-});
+
+
+  /* -------------------------------------------------------
+     DELETE TEACHER ID — Custom Modal
+  ------------------------------------------------------- */
+
+  let deleteTargetId = null;
+
+  const deleteConfirmModal = document.getElementById("deleteConfirmModal");
+  const confirmDeleteBtn = document.getElementById("confirmDelete");
+  const cancelDeleteBtn = document.getElementById("cancelDelete");
+  const closeDeleteConfirm = document.getElementById("closeDeleteConfirm");
+
+  // Open modal when clicking delete icon
+  teacherTableBody.addEventListener("click", (e) => {
+    const btn = e.target.closest(".action-delete");
+    if (!btn) return;
+
+    deleteTargetId = btn.dataset.id;
+    deleteConfirmModal.classList.remove("hidden");
+  });
+
+  // Close modal
+  function closeDeleteModal() {
+    deleteConfirmModal.classList.add("hidden");
+    deleteTargetId = null;
+  }
+
+  cancelDeleteBtn.addEventListener("click", closeDeleteModal);
+  closeDeleteConfirm.addEventListener("click", closeDeleteModal);
+
+  // Confirm delete
+  confirmDeleteBtn.addEventListener("click", async () => {
+    if (!deleteTargetId) return;
+
+    try {
+      const res = await fetch(`/delete_teacher_id/${deleteTargetId}`, {
+        method: "DELETE"
+      });
+
+      const data = await res.json();
+
+      if (data.success) {
+        // Remove from list instantly
+        TEACHERS = TEACHERS.filter(t => t.id != deleteTargetId);
+
+        // Re-render table immediately
+        renderTeacherTable();
+      } else {
+        alert("Failed to delete: " + (data.error || "Unknown error"));
+      }
+    } catch (err) {
+      console.error("❌ Delete failed:", err);
+    }
+
+    closeDeleteModal();
+  });
+
+});   // ✅ FINAL CLOSING BRACKET FOR DOMContentLoaded
+
+

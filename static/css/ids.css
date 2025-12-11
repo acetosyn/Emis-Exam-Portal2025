@@ -1,266 +1,442 @@
 /* ==========================================================
-   EMIS ID MANAGEMENT — ids.css (v6.5)
+   EMIS ID MANAGEMENT — ids.css (Compact v7.6)
    ----------------------------------------------------------
-   Navy-blue stat cards + visible buttons (override admin1.css)
+   Ultra-light, compact, beautiful layout:
+   - Small stat cards
+   - Compact quick modules
+   - Tight student cards
+   - Clean teacher table
 ========================================================== */
 
 :root {
-  --primary: #0f2b46;      /* Navy Blue */
+  --primary: #0f2b46;
   --accent: #e11d48;
   --bg-white: #ffffff;
   --bg-soft: #f8fafc;
   --border: #e5e7eb;
   --radius: 12px;
-  --shadow-sm: 0 2px 6px rgba(0,0,0,0.06);
-  --shadow-md: 0 6px 16px rgba(0,0,0,0.12);
-  --shadow-hover: 0 8px 20px rgba(0,0,0,0.16);
-  --transition: all 0.25s ease;
+  --shadow-sm: 0 1px 3px rgba(0,0,0,.06);
+  --shadow-md: 0 4px 10px rgba(0,0,0,.10);
+  --shadow-lg: 0 8px 20px rgba(0,0,0,.12);
+  --transition: all .22s ease;
 }
 
-/* ----------------------------------------------------------
-   ADMIN DASHBOARD LAYOUT
----------------------------------------------------------- */
+/* ==========================================================
+   PAGE LAYOUT
+========================================================== */
 .admin-dashboard {
-  padding: 2rem;
-  background: linear-gradient(135deg, #f9fafc, #eef2f7);
-  animation: fadeIn .6s ease both;
+  padding: 1.5rem;
+  background: linear-gradient(145deg, #f8fafc, #eef2f7);
+  animation: fadeIn .4s ease;
 }
 
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ==========================================================
+   HEADER
+========================================================== */
 .dash-header {
   display: flex;
   justify-content: space-between;
-  align-items: center;
-  margin-bottom: 1.5rem;
+  margin-bottom: 1rem;
 }
+
 .dash-header h2 {
   font-weight: 800;
+  font-size: 1.3rem;
   color: var(--primary);
-  margin: 0;
 }
+
 .dash-header p {
-  color: #64748b;
-  font-size: 0.9rem;
-  margin-top: 0.3rem;
+  font-size: .8rem;
+  color: #6b7280;
 }
 
 .header-actions {
   display: flex;
-  gap: 0.6rem;
+  gap: .5rem;
 }
 
-/* ----------------------------------------------------------
-   BUTTONS — FORCE OVERRIDE admin1.css
----------------------------------------------------------- */
+/* ==========================================================
+   BUTTONS (Compact)
+========================================================== */
 .btn-primary,
 .btn-secondary {
-  all: unset; /* reset admin1.css rules completely */
-  display: inline-flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  gap: 0.4rem !important;
-  border-radius: 10px !important;
-  padding: 0.6rem 1rem !important;
-  font-weight: 600 !important;
-  font-size: 0.88rem !important;
-  cursor: pointer !important;
-  color: #fff !important;
-  transition: var(--transition) !important;
+  all: unset;
+  cursor: pointer;
+  padding: .45rem .8rem;      /* SMALLER */
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: .78rem;
+  display: inline-flex;
+  align-items: center;
+  gap: .35rem;
+  color: #fff;
+  transition: var(--transition);
 }
 
-/* Visible Generate Teacher IDs button */
 .btn-primary {
-  background: linear-gradient(135deg, #2563eb, #1e3a8a) !important;
-  box-shadow: 0 3px 10px rgba(37,99,235,0.25) !important;
+  background: linear-gradient(135deg, #2563eb, #1e3a8a);
 }
 .btn-primary:hover {
-  background: linear-gradient(135deg, #1d4ed8, #1e3a8a) !important;
   transform: translateY(-2px);
 }
 
-/* Visible Sync Supabase button */
 .btn-secondary {
-  background: linear-gradient(135deg, #0d9488, #115e59) !important;
-  box-shadow: 0 3px 10px rgba(13,148,136,0.25) !important;
+  background: linear-gradient(135deg, #0d9488, #115e59);
 }
 .btn-secondary:hover {
-  background: linear-gradient(135deg, #0f766e, #134e4a) !important;
   transform: translateY(-2px);
 }
 
-/* ----------------------------------------------------------
-   STAT CARDS — NAVY BLUE WITH WHITE TEXT
----------------------------------------------------------- */
+/* ==========================================================
+   COMPACT STAT CARDS
+========================================================== */
 .stat-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-  gap: 1rem;
-  margin-bottom: 2rem;
+  grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); /* MUCH SMALLER */
+  gap: .7rem;
+  margin-bottom: 1.4rem;
 }
 
 .stat-card {
+  background: var(--primary);
+  color: #fff;
+  padding: .6rem .8rem;      /* SMALLER */
+  border-radius: 10px;
   display: flex;
+  gap: .4rem;
   align-items: center;
-  justify-content: space-between;
-  background: var(--primary) !important;
-  color: #ffffff !important;
-  border-radius: var(--radius);
-  padding: 0.7rem 1rem;
-  box-shadow: var(--shadow-md);
-  transition: var(--transition);
-  min-height: 65px;
-}
-.stat-card:hover {
-  transform: translateY(-2px);
-  box-shadow: var(--shadow-hover);
+  box-shadow: var(--shadow-sm);
+  min-height: 55px;          /* COMPACT HEIGHT */
 }
 
 .stat-card .icon {
-  font-size: 1.3rem;
-  opacity: 0.95;
-  color: #fff !important;
-}
-.stat-card p {
-  margin: 0;
-  font-weight: 600;
-  font-size: 0.82rem;
-  color: #fff !important;
-}
-.stat-card h2 {
-  margin: 0.15rem 0 0;
   font-size: 1rem;
-  font-weight: 700;
-  color: #fff !important;
+  opacity: .9;
 }
 
-/* ----------------------------------------------------------
-   QUICK ID TOOLS (retain colorful styles)
----------------------------------------------------------- */
+.stat-card p {
+  font-size: .7rem;
+  margin: 0;
+}
+
+.stat-card h2 {
+  font-size: .9rem;
+  margin: 0;
+  font-weight: 700;
+}
+
+/* ==========================================================
+   COMPACT QUICK MODULE TILES
+========================================================== */
 .quick-modules {
   background: var(--bg-white);
-  border-radius: var(--radius);
+  padding: 1rem;
+  border-radius: 12px;
   box-shadow: var(--shadow-md);
-  padding: 1.5rem;
-  margin-bottom: 2rem;
+  margin-bottom: 1.5rem;
 }
+
 .quick-modules h3 {
+  font-size: 1rem;
   font-weight: 700;
   color: var(--primary);
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
 }
-.quick-modules .sub-text {
+
+.sub-text {
+  font-size: .78rem;
   color: #6b7280;
-  font-size: 0.9rem;
-  margin-bottom: 1.2rem;
 }
 
 .modules-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(85px, 1fr));
-  gap: 0.8rem;
-  justify-items: center;
+  grid-template-columns: repeat(auto-fit, minmax(70px, 1fr)); /* SMALL TILES */
+  gap: .7rem;
+  margin-top: .9rem;
 }
+
 .module-item {
-  width: 100%;
-  max-width: 90px;
-  min-height: 75px;
-  border-radius: 12px;
-  color: #fff;
+  min-height: 70px;       /* smaller */
+  padding: .6rem .3rem;
+  font-size: .7rem;
+  border-radius: 10px;
   text-align: center;
   font-weight: 700;
-  font-size: 0.74rem;
+  color: #fff;
   display: flex;
   flex-direction: column;
-  align-items: center;
   justify-content: center;
-  box-shadow: var(--shadow-sm);
   cursor: pointer;
   transition: var(--transition);
 }
-.module-item:hover {
-  transform: translateY(-3px);
-  box-shadow: var(--shadow-hover);
+
+.module-item i {
+  font-size: 1rem;        /* smaller icon */
+  margin-bottom: .25rem;
 }
 
-/* Keep Quick Tool colors intact */
+/* Colors remain the same */
 .blue { background: #3b82f6; }
 .teal { background: #0d9488; }
 .green { background: #10b981; }
-.orange { background: #f59e0b; color: #111; }
+.orange { background: #f59e0b; color: #000; }
 .purple { background: #6366f1; }
 .red { background: #e11d48; }
 .yellow { background: #facc15; color: #111; }
 .pink { background: #ec4899; }
 
-/* ----------------------------------------------------------
-   ANIMATIONS
----------------------------------------------------------- */
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(10px); }
-  to { opacity: 1; transform: translateY(0); }
+/* ==========================================================
+   TEACHER TABLE — COMPACT ROWS
+========================================================== */
+.table-container {
+  padding: 1rem;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: var(--shadow-md);
 }
 
+.table-title {
+  font-size: 1rem;
+  font-weight: 700;
+  margin-bottom: .7rem;
+  color: var(--primary);
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+thead th {
+  background: var(--primary);
+  color: #fff;
+  padding: .55rem;
+  font-size: .75rem;
+}
+
+tbody td {
+  padding: .5rem .55rem;
+  font-size: .78rem;
+  border-bottom: 1px solid #e5e7eb;
+}
 
 /* ==========================================================
-   FIX: Header Filters + Table Header (restore navy theme)
+   STUDENT CARDS — COMPACT
 ========================================================== */
-
-/* Dropdown + Search row */
-.filter-bar,
-.view-controls {
+.student-card {
   display: flex;
   align-items: center;
-  gap: 0.6rem;
-  background: var(--primary);
-  padding: 0.7rem 1rem;
-  border-radius: var(--radius);
-  box-shadow: var(--shadow-sm);
-  margin-bottom: 1rem;
-}
-
-.filter-bar select,
-.filter-bar input[type="text"],
-.view-controls select,
-.view-controls input[type="text"] {
-  background: #f1f5f9;
-  border: none;
-  border-radius: 8px;
-  padding: 0.45rem 0.75rem;
-  font-size: 0.9rem;
-  color: var(--primary);
-  font-weight: 600;
-  outline: none;
-  box-shadow: inset 0 1px 3px rgba(0,0,0,0.1);
+  padding: .6rem;
+  background: #f9fafc;
+  border-radius: 10px;
   transition: var(--transition);
 }
 
-.filter-bar select:focus,
-.filter-bar input[type="text"]:focus {
-  background: #fff;
-  box-shadow: 0 0 0 3px rgba(59,130,246,0.25);
+.student-card .avatar {
+  width: 36px;
+  height: 36px;            /* smaller */
+  border-radius: 50%;
+  background: #0ea5e9;
+  color: #fff;
+  font-size: .95rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-/* Export button area alignment */
-.export-btn {
+.student-card h4 {
+  font-size: .85rem;
+  margin-bottom: 2px;
+}
+
+.detail-line {
+  font-size: .75rem;
+  margin-top: 2px;
+}
+
+.login-hint {
+  font-size: .7rem;
+  margin-top: 4px;
+}
+
+/* ==========================================================
+   MODALS
+========================================================== */
+.modal.hidden,
+.cred-overlay.hidden {
+  display: none !important;
+}
+
+.modal,
+.cred-overlay {
   display: flex;
-  justify-content: flex-end;
+}
+
+
+.modal.show,
+.cred-overlay:not(.hidden) {
+  display: flex;
+}
+
+.modal,
+.cred-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  background: rgba(0,0,0,.45);
+  backdrop-filter: blur(3px);
+  justify-content: center;
   align-items: center;
 }
 
-/* Table Header — bring back navy blue */
-table thead {
-  background: var(--primary) !important;
-  color: #fff !important;
+.modal-content,
+.cred-container {
+  background: #fff;
+  border-radius: 18px;
+  padding: 1.2rem;
+  width: 92%;
+  max-width: 450px;
+  box-shadow: var(--shadow-lg);
+  animation: fadeIn .35s ease;
 }
-table thead th {
-  padding: 0.85rem;
-  text-align: left;
+
+.cred-container {
+  max-width: 650px;
+}
+
+.modal-content button[id^="close"],
+.cred-container button[id^="close"] {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 28px;
+  height: 28px;
+  font-size: .85rem;
+  background: #e5e7eb;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+
+
+
+/* ==========================================================
+   DELETE CONFIRMATION MODAL — PREMIUM STYLING
+========================================================== */
+#deleteConfirmModal {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: none; /* hidden by default */
+  justify-content: center;
+  align-items: center;
+  background: rgba(0,0,0,0.45);
+  backdrop-filter: blur(3px);
+  padding: 1rem;
+}
+
+#deleteConfirmModal:not(.hidden) {
+  display: flex !important;
+}
+
+#deleteConfirmModal .modal-content {
+  background: #ffffff;
+  padding: 1.5rem 1.7rem;
+  border-radius: 16px;
+  width: 92%;
+  max-width: 380px;
+  box-shadow: var(--shadow-lg);
+  animation: scaleIn .28s ease-out;
+  position: relative;
+}
+
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.85);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Title */
+#deleteConfirmModal h3 {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #dc2626; /* red-600 */
+  text-align: center;
+  margin-bottom: .5rem;
+}
+
+/* Description text */
+#deleteConfirmModal p {
+  font-size: .82rem;
+  color: #4b5563;
+  text-align: center;
+  margin-bottom: 1.2rem;
+}
+
+/* Buttons container */
+#deleteConfirmModal .btn-row {
+  display: flex;
+  gap: .7rem;
+}
+
+/* Buttons */
+#deleteConfirmModal button {
+  flex: 1;
+  padding: .55rem 0;
+  border-radius: 8px;
+  font-size: .8rem;
   font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.3px;
-  font-size: 0.85rem;
+  cursor: pointer;
+  transition: var(--transition);
 }
-table tbody tr:hover {
-  background: #f9fafc;
+
+/* Cancel */
+#cancelDelete {
+  background: #e5e7eb;
+  color: #374151;
+}
+#cancelDelete:hover {
+  background: #d1d5db;
+}
+
+/* Confirm Delete */
+#confirmDelete {
+  background: #dc2626;
+  color: white;
+}
+#confirmDelete:hover {
+  background: #b91c1c;
+}
+
+/* Close (X) button */
+#closeDeleteConfirm {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  font-size: .8rem;
+  background: #e5e7eb;
+  color: #374151;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+#closeDeleteConfirm:hover {
+  background: #dc2626;
+  color: white;
 }
