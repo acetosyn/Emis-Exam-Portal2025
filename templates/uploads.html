@@ -4,46 +4,59 @@
 <div class="uploads-wrapper fade-in">
 
   <!-- ===========================================================
-       HEADER — Title, role badge, quick actions
-       (Short comment: This section establishes context + controls)
-  ============================================================ -->
-  <div class="uploads-header">
-    <div class="uploads-header-main">
+     HEADER — Title, available years, role badge, quick actions
+============================================================ -->
+<div class="uploads-header">
+  <div class="uploads-header-main">
 
-      <!-- LEFT TITLE -->
-      <div class="uploads-header-left">
-        <h3>
-          <i class="fa-solid fa-cloud-arrow-up text-accent"></i>
-          Exam & Past Questions Uploads
-        </h3>
-        <p class="sub-text">
-          Manage JSON exam files by academic year. Upload → View → Push to student portal.
-        </p>
-      </div>
+    <!-- LEFT: TITLE -->
+    <div class="uploads-header-left">
+      <h3>
+        <i class="fa-solid fa-cloud-arrow-up text-accent"></i>
+        Exam & Past Questions Uploads
+      </h3>
+      <p class="sub-text">
+        Manage JSON exam files by academic year. Upload → View → Push to student portal.
+      </p>
+    </div>
 
-      <!-- RIGHT BADGES -->
-      <div class="uploads-header-right">
-
-        <!-- Role Indicator -->
-        <div class="role-banner" data-role="{{ user_type|default('admin') }}">
-          {% if user_type == 'teacher' %}
-            <i class="fa-solid fa-chalkboard-user text-green-600"></i> Teacher Mode
-          {% else %}
-            <i class="fa-solid fa-shield-halved text-accent"></i> Admin Mode
-          {% endif %}
+    <!-- CENTER: AVAILABLE WAEC YEARS (NEW) -->
+    <div class="uploads-header-center">
+      <div class="available-years-card">
+        <div class="available-years-title">
+          <i class="fa-solid fa-calendar-check"></i>
+          Available WAEC Years
         </div>
 
-        <!-- View Subjects Button -->
-        <div class="header-actions">
-          <button id="btnViewSubjects" class="btn-ghost small">
-            <i class="fa-solid fa-book-open-reader"></i>
-            View Subjects
-          </button>
+        <div id="availableYearsList" class="available-years-list">
+          <span class="year-loading">Loading…</span>
         </div>
-
       </div>
     </div>
+
+    <!-- RIGHT: ROLE + ACTIONS -->
+    <div class="uploads-header-right">
+
+      <!-- Role Indicator -->
+      <div class="role-banner" data-role="{{ user_type|default('admin') }}">
+        {% if user_type == 'teacher' %}
+          <i class="fa-solid fa-chalkboard-user text-green-600"></i> Teacher Mode
+        {% else %}
+          <i class="fa-solid fa-shield-halved text-accent"></i> Admin Mode
+        {% endif %}
+      </div>
+
+      <!-- View Subjects Button -->
+      <div class="header-actions">
+        <button id="btnViewSubjects" class="btn-ghost small">
+          <i class="fa-solid fa-book-open-reader"></i>
+          View Subjects
+        </button>
+      </div>
+
+    </div>
   </div>
+</div>
 
 
   <!-- ===========================================================

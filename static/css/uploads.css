@@ -760,3 +760,58 @@
   color: #1d2f73;                       /* deep academic blue */
   letter-spacing: 0.3px;
 }
+
+
+
+/* =========================================================
+   HEADER CENTER — AVAILABLE WAEC YEARS
+========================================================= */
+
+.uploads-header-main {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.uploads-header-center {
+  flex: 0 0 auto;
+}
+
+.available-years-card {
+  background: #ffffff;
+  border-radius: 14px;
+  padding: 8px 12px;
+  min-width: 220px;
+  box-shadow: 0 6px 14px rgba(0,0,0,0.08);
+}
+
+.available-years-title {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #1e3a8a;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 6px;
+}
+
+.available-years-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.available-years-list .year-badge {
+  background: #e0ecff;
+  color: #1d4ed8;
+  font-size: 0.7rem;
+  padding: 4px 8px;
+  border-radius: 999px;
+  font-weight: 700;
+}
+
+.year-loading {
+  font-size: 0.7rem;
+  color: #6b7280;
+}

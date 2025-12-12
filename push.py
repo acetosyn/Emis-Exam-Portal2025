@@ -268,3 +268,57 @@ def student_get_pushed():
             for s in pushed_list
         ]
     })
+
+
+
+# ======================================================================
+# Detect available WAEC years (subjects-json has at least one .json)
+# ======================================================================
+def get_available_subject_years():
+    """
+    Scans static/subjects/<YEAR>/subjects-json/** for JSON files.
+    Returns sorted list of available years.
+    """
+
+    years = []
+
+    if not SUBJECTS_JSON_ROOT.exists():
+        return years
+
+    for year_dir in SUBJECTS_JSON_ROOT.iterdir():
+        if not year_dir.is_dir():
+            continue
+
+        year = year_dir.name
+        if not year.isdigit():
+            continue
+
+        subjects_json_dir = year_dir / "subjects-json"
+        if not subjects_json_dir.exists():
+            continue
+
+        found_json = False
+
+        for root, _, files in os.walk(subjects_json_dir):
+            for f in files:
+                if f.endswith(".json"):
+                    found_json = True
+                    break
+            if found_json:
+                break
+
+        if found_json:
+            years.append(int(year))
+
+    return sorted(years)
+
+
+# ======================================================================
+# API — Available WAEC Years (for Admin UI)
+# ======================================================================
+@push_bp.route("/available-years", methods=["GET"])
+def available_waec_years():
+    years = get_available_subject_years()
+    return jsonify({
+        "years": years
+    })
