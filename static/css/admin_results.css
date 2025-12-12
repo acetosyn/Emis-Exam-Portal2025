@@ -637,7 +637,6 @@
 }
 
 
-
 /* ============================================================================
    EMIS NOTIFICATIONS — NAVY BLUE + GOLD PREMIUM THEME (2025)
    Luxury UI · High Contrast · Extremely Readable · Beautiful Animations
@@ -652,48 +651,55 @@
   gap: 18px;
   margin-bottom: 1.8rem;
   padding-right: 6px;
+  align-items: stretch; /* same height */
 }
 
 /* ------------------------------------------------------------
-   OUTER CARD (Porcelain White — best contrast for navy)
+   OUTER CARD (Flexible width, NOT height)
 ------------------------------------------------------------- */
 .emis-notif-card {
-  width: 360px;
-  background: #f3f4f6; /* light grey */
-/* soft porcelain white (not pure white) */
+  flex: 1;
+  min-width: 340px;
+  background: #f3f4f6; /* porcelain light */
   border-radius: 14px;
-  padding: 14px 16px;
+  padding: 16px 18px;
   border: 1px solid rgba(0, 0, 0, 0.05);
   box-shadow: 0 4px 14px rgba(0, 0, 0, 0.07);
   color: #0f172a;
+  display: flex;
+  flex-direction: column;
 }
 
+/* 🔥 Exam Activity card — wider, NOT longer */
+#examNotifCard {
+  flex: 1.35;
+}
 
 /* ------------------------------------------------------------
-   HEADER — White + Gold
+   HEADER — Bold, Premium, Slightly Larger
 ------------------------------------------------------------- */
 .emis-notif-header {
   display: flex;
   align-items: center;
-  margin-bottom: 10px;
+  margin-bottom: 12px;
 }
 
 .emis-notif-header h3 {
-  font-size: 1rem;
+  font-size: 1.08rem;
   font-weight: 900;
   color: #f80606;
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 8px;
 }
 
 .emis-notif-header h3 i {
   color: #fbbf24;      /* gold accent */
-  font-size: 1.05rem;
+  font-size: 1.1rem;
 }
 
 /* ------------------------------------------------------------
-   LIST AREA
+   LIST AREA (fixed height so cards stay same length)
 ------------------------------------------------------------- */
 .emis-notif-list {
   list-style: none;
@@ -706,37 +712,48 @@
 .emis-notif-list::-webkit-scrollbar {
   width: 4px;
 }
+
 .emis-notif-list::-webkit-scrollbar-thumb {
-  background: rgba(255,255,255,0.25);
+  background: rgba(0,0,0,0.25);
   border-radius: 8px;
 }
 
 /* ------------------------------------------------------------
-   EMPTY STATE
+   EMPTY STATE — Cleaner, Bigger, Better Spacing
 ------------------------------------------------------------- */
 .emis-notif-empty {
   text-align: center;
-  padding: 14px 0;
-  font-size: 0.8rem;
-  color: #cbd5e1;
+  padding: 18px 12px;
+  font-size: 0.88rem;
+  color: #94a3b8;
+  line-height: 1.55;
 }
 
 .emis-notif-empty i {
-  opacity: 0.5;
-  font-size: 1.1rem;
+  opacity: 0.55;
+  font-size: 1.2rem;
   color: #fbbf24;
+  margin-bottom: 6px;
+}
+
+.emis-notif-empty p {
+  font-weight: 800;
+  margin: 6px 0 2px;
+}
+
+.emis-notif-empty span {
+  font-size: 0.78rem;
 }
 
 /* ------------------------------------------------------------
    NOTIFICATION ITEM
-   Navy Teal Card · White Text · Gold Accent
 ------------------------------------------------------------- */
 .emis-notif-item {
   display: flex;
-  gap: 12px;
-  padding: 10px 12px;
-  background: #172a46; /* lighter navy */
-  border-radius: 10px;
+  gap: 14px;
+  padding: 12px 14px;
+  background: #172a46;
+  border-radius: 12px;
   border-left: 3px solid transparent;
   margin-bottom: 10px;
 
@@ -746,60 +763,61 @@
     background-color 0.18s ease;
 }
 
-/* Subtle hover */
+/* Hover */
 .emis-notif-item:hover {
   transform: translateY(-2px);
   background: #1e3356;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.28);
+  box-shadow: 0 6px 16px rgba(0,0,0,0.28);
 }
 
 /* ------------------------------------------------------------
    ICON BUBBLE — GOLD
 ------------------------------------------------------------- */
 .notif-icon {
-  width: 28px;
-  height: 28px;
+  width: 30px;
+  height: 30px;
   border-radius: 999px;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: rgba(251,191,36,0.2);
-  color: #fbbf24; /* gold */
-  font-size: 0.85rem;
+  background: rgba(251,191,36,0.22);
+  color: #fbbf24;
+  font-size: 0.9rem;
+  flex-shrink: 0;
 }
 
 /* ------------------------------------------------------------
-   TEXT — PREMIUM WHITE
+   TEXT — Larger, Cleaner, Breathable
 ------------------------------------------------------------- */
 .notif-main {
   display: flex;
   flex-direction: column;
-  line-height: 1.28;
+  line-height: 1.45;
 }
 
 .notif-main strong {
-  font-size: 0.82rem;
+  font-size: 0.9rem;
   font-weight: 800;
-  color: #ffffff;      /* pure white */
+  color: #ffffff;
 }
 
 .notif-sub {
-  font-size: 0.74rem;
-  color: #e5e7eb;      /* light gray */
+  font-size: 0.82rem;
+  color: #e5e7eb;
   font-weight: 500;
 }
 
 .notif-meta {
-  margin-top: 2px;
-  font-size: 0.67rem;
-  color: #cbd5e1;       /* slate gray */
+  margin-top: 3px;
+  font-size: 0.72rem;
+  color: #cbd5e1;
 }
 
 /* ------------------------------------------------------------
    NEW ITEM ANIMATION — GOLD SLIDE IN
 ------------------------------------------------------------- */
 .emis-notif-item.is-new {
-  border-left-color: #fbbf24; /* gold */
+  border-left-color: #fbbf24;
   background: #1e3356;
   animation: notifSlideIn 0.32s ease-out;
 }
@@ -812,5 +830,160 @@
   to {
     opacity: 1;
     transform: translateY(0);
+  }
+}
+
+
+
+
+/* ============================================================================
+   PULSE / BREATHING GLOW — NEW EXAM ACTIVITY
+   Subtle · Premium · Attention-Grabbing (Not Aggressive)
+============================================================================ */
+
+/* Soft breathing glow for NEW exam notifications */
+#examNotifCard .emis-notif-item.is-new {
+  position: relative;
+  animation: examBreathGlow 2.8s ease-in-out infinite;
+}
+
+/* Outer glow ring */
+#examNotifCard .emis-notif-item.is-new::after {
+  content: "";
+  position: absolute;
+  inset: -2px;
+  border-radius: 14px;
+  background: radial-gradient(
+    circle,
+    rgba(251,191,36,0.35) 0%,
+    rgba(251,191,36,0.18) 35%,
+    transparent 70%
+  );
+  opacity: 0;
+  animation: examGlowPulse 2.8s ease-in-out infinite;
+  pointer-events: none;
+}
+
+/* Breathing animation (card) */
+@keyframes examBreathGlow {
+  0% {
+    box-shadow:
+      0 0 0 rgba(251,191,36,0.0),
+      0 4px 14px rgba(0,0,0,0.25);
+  }
+  50% {
+    box-shadow:
+      0 0 14px rgba(251,191,36,0.45),
+      0 6px 20px rgba(0,0,0,0.35);
+  }
+  100% {
+    box-shadow:
+      0 0 0 rgba(251,191,36,0.0),
+      0 4px 14px rgba(0,0,0,0.25);
+  }
+}
+
+/* Glow ring pulse */
+@keyframes examGlowPulse {
+  0% {
+    opacity: 0;
+    transform: scale(0.96);
+  }
+  50% {
+    opacity: 0.75;
+    transform: scale(1.02);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(0.96);
+  }
+}
+
+/* ============================================================================
+   CINEMATIC ATTENTION ANIMATION — NEW EXAM SUBMISSION
+   Zoom In → Glow → Breathe → Return (x5)
+============================================================================ */
+
+/* Trigger cinematic motion 5 times */
+#examNotifCard .emis-notif-item.is-new {
+  position: relative;
+  z-index: 5;
+
+  animation-name: examCinematicPush;
+  animation-duration: 1.8s;
+  animation-timing-function: cubic-bezier(.16,.84,.44,1);
+  animation-iteration-count: 5;
+}
+
+/* Soft glow overlay (syncs with motion) */
+#examNotifCard .emis-notif-item.is-new::after {
+  content: "";
+  position: absolute;
+  inset: -6px;
+  border-radius: 16px;
+  background: radial-gradient(
+    circle,
+    rgba(251,191,36,0.45) 0%,
+    rgba(251,191,36,0.25) 35%,
+    transparent 70%
+  );
+  pointer-events: none;
+
+  animation-name: examGlowCinematic;
+  animation-duration: 1.8s;
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: 5;
+}
+
+/* ------------------------------------------------------------
+   MAIN CINEMATIC MOTION (Push → Hold → Return)
+------------------------------------------------------------- */
+@keyframes examCinematicPush {
+  0% {
+    transform: scale(1) translateY(0);
+    box-shadow: 0 6px 16px rgba(0,0,0,0.28);
+  }
+
+  35% {
+    transform: scale(1.08) translateY(-4px);
+    box-shadow:
+      0 0 18px rgba(251,191,36,0.55),
+      0 14px 34px rgba(0,0,0,0.45);
+  }
+
+  60% {
+    transform: scale(1.08) translateY(-4px);
+    box-shadow:
+      0 0 22px rgba(251,191,36,0.65),
+      0 16px 40px rgba(0,0,0,0.5);
+  }
+
+  100% {
+    transform: scale(1) translateY(0);
+    box-shadow: 0 6px 16px rgba(0,0,0,0.28);
+  }
+}
+
+/* ------------------------------------------------------------
+   GLOW TIMING (SYNCED WITH MOTION)
+------------------------------------------------------------- */
+@keyframes examGlowCinematic {
+  0% {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+
+  40% {
+    opacity: 0.85;
+    transform: scale(1.05);
+  }
+
+  70% {
+    opacity: 0.65;
+  }
+
+  100% {
+    opacity: 0;
+    transform: scale(0.95);
   }
 }
