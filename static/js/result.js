@@ -48,64 +48,105 @@ function injectStudentInfo() {
 }
 
 /* ------------------------------------------------------------
-   2. Populate Result Values
+   2. Populate Result Values — WAEC Standard (70% Pass)
 -------------------------------------------------------------*/
 function populateResult() {
     const r = window.resultData;
 
-    setText("correctAnswers", r.correct);
-    setText("totalQuestions", r.total);
-    setText("incorrectAnswers", r.total - r.correct);
-    setText("answeredQuestions", r.answered);
-    setText("skippedQuestions", r.total - r.answered);
+    const correct  = Number(r.correct || 0);
+    const total    = Number(r.total || 0);
+    const answered = Number(r.answered || 0);
+
+    /* -------------------------------
+       BASIC COUNTS
+    ------------------------------- */
+    setText("correctAnswers", correct);
+    setText("totalQuestions", total);
+    setText("incorrectAnswers", total - correct);
+    setText("answeredQuestions", answered);
+    setText("skippedQuestions", total - answered);
     setText("flaggedQuestions", r.flagged || 0);
     setText("tabSwitches", r.tabSwitches || 0);
 
-    // Subject
     setText("subjectName", r.subject);
 
-    // Accuracy %
-    const accuracy = r.answered > 0 ? Math.round((r.correct / r.answered) * 100) : 0;
+    /* -------------------------------
+       ACCURACY (%)
+    ------------------------------- */
+    const accuracy =
+        answered > 0 ? Math.round((correct / answered) * 100) : 0;
     setText("accuracyRate", accuracy + "%");
 
-    // Time taken
-    setText("timeTaken", formatTime(r.time_taken));
+    /* -------------------------------
+       TIME
+    ------------------------------- */
+    setText("timeTaken", formatTime(r.time_taken || 0));
 
-    // Avg time per question
-    const avg = r.answered > 0 ? Math.round(r.time_taken / r.answered) : 0;
+    const avg =
+        answered > 0 ? Math.round((r.time_taken || 0) / answered) : 0;
     setText("avgTimePerQuestion", avg + "s");
 
-    // Completion timestamp
+    /* -------------------------------
+       COMPLETION DATE
+    ------------------------------- */
     const completion = r.submitted_at
         ? new Date(r.submitted_at).toLocaleString()
         : "--";
     setText("completionDate", completion);
 
-    // Status
     setText("examStatus", r.status || "Completed");
 
-    // Pass/Fail
+    /* ======================================================
+       PASS / FAIL — WAEC RULE (70%)
+    ====================================================== */
+    const passMark = Math.ceil(total * 0.7);
+    const passed   = correct >= passMark;
+
     const pf = document.getElementById("passFail");
-    if (r.score >= 50) {
+    const resultMessage = document.getElementById("resultMessage");
+
+    // reset state
+    resultMessage.classList.remove("pass-message", "fail-message");
+
+    if (passed) {
         pf.textContent = "PASS ✓";
-        pf.style.color = "#22d3ee";
+        pf.style.color = "#16a34a";
+
+        resultMessage.classList.add("pass-message");
+        resultMessage.innerHTML = `
+            🎉 <strong>Congratulations!</strong> You passed this exam.
+            <small>
+                Pass Mark: ${passMark} / ${total} (70%)
+            </small>
+        `;
+
+        // 🎊 celebrate once
+        setTimeout(() => {
+            startConfettiBurst();
+        }, 400);
+
     } else {
         pf.textContent = "FAIL ✗";
-        pf.style.color = "#f87171";
+        pf.style.color = "#dc2626";
+
+        resultMessage.classList.add("fail-message");
+        resultMessage.innerHTML = `
+            ❌ <strong>Keep Trying!</strong> You did not meet the pass mark.
+            <small>
+                Pass Mark: ${passMark} / ${total} (70%)
+            </small>
+        `;
     }
 
-    // Summary message
-    document.getElementById("resultMessage").textContent =
-        r.score >= 50
-            ? "You passed this exam. Excellent job!"
-            : "You failed this exam Unfortuately! Better luck next time.";
-
-    // ⭐⭐⭐ BIG RAW SCORE DISPLAY (Fix for Score: X / Y)
+    /* -------------------------------
+       BIG RAW SCORE DISPLAY
+    ------------------------------- */
     const rawScoreText = document.getElementById("rawScoreText");
     if (rawScoreText) {
-        rawScoreText.textContent = `Score: ${r.correct} / ${r.total}`;
+        rawScoreText.textContent = `Score: ${correct} / ${total}`;
     }
 }
+
 
 
 /* ------------------------------------------------------------
@@ -218,6 +259,35 @@ function randomColor() {
     const c = ["#38bdf8", "#34d399", "#fbbf24", "#fb7185", "#c084fc"];
     return c[Math.floor(Math.random() * c.length)];
 }
+
+
+/* ------------------------------------------------------------
+   🎉 PARTY POP CONFETTI — LEGACY CELEBRATION
+-------------------------------------------------------------*/
+function partyPopConfetti() {
+    const colors = ["#22c55e", "#38bdf8", "#fbbf24", "#a855f7", "#fb7185"];
+
+    for (let i = 0; i < 35; i++) {
+        const conf = document.createElement("div");
+
+        conf.style.position = "fixed";
+        conf.style.width = "10px";
+        conf.style.height = "10px";
+        conf.style.borderRadius = "50%";
+        conf.style.background = colors[Math.floor(Math.random() * colors.length)];
+        conf.style.left = Math.random() * 100 + "vw";
+        conf.style.top = "-12px";
+        conf.style.opacity = "0.95";
+        conf.style.zIndex = "9999";
+        conf.style.animation = `partyFall ${2 + Math.random() * 2}s ease-out forwards`;
+
+        document.body.appendChild(conf);
+
+        setTimeout(() => conf.remove(), 5000);
+    }
+}
+
+
 
 /* ------------------------------------------------------------
    7. Save Result to Backend
