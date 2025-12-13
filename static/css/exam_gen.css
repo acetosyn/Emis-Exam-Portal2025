@@ -374,89 +374,147 @@
 
 
 /* ============================================================
-   FIXED — CENTERED INSTRUCTION MODAL (Medium Size)
-   ============================================================ */
+   INSTRUCTIONS MODAL — MODERN EXAM UI (START EXAM)
+   Safe • Centered • Non-intrusive
+============================================================ */
 
+/* Fullscreen overlay safety */
+#instructionsModal {
+  position: fixed !important;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+}
+
+/* Main modal card */
 #instructionsModal .modern-instr-card {
-  max-width: 720px;          /* ⭐ Not wide anymore */
-  width: 100%;
-  margin: auto;
-  border-radius: 18px;
-  padding: 0;
+  max-width: 720px;
+  width: 92%;
   background: #ffffff;
+  border-radius: 18px;
   box-shadow: 0 20px 50px rgba(0,0,0,0.18);
+  overflow: hidden;
   position: relative;
 }
 
-/* Header */
+/* ================= HEADER ================= */
+
 #instructionsModal .instr-head {
   padding: 22px 26px;
-  border-bottom: 1px solid rgba(0,0,0,0.06);
+  border-bottom: 1px solid rgba(15,23,42,0.08);
 }
+
 #instructionsModal .instr-head h2 {
   font-size: 1.45rem;
   font-weight: 800;
+  color: #0f172a;
+  margin: 0;
 }
+
 #instructionsModal .instr-head .subtitle {
   margin-top: 4px;
-  font-size: 0.92rem;
-  color: #64748b;
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: #6b7280;
 }
 
 /* Duration badge */
 #instructionsModal .exam-duration-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 10px;
+  background: linear-gradient(90deg, #1e3a8a, #2563eb);
+  color: #fff;
+  font-weight: 600;
   padding: 6px 12px;
+  border-radius: 999px;
   font-size: 0.85rem;
+  box-shadow: 0 2px 8px rgba(37,99,235,0.25);
 }
 
-/* Make icons smaller */
-#instructionsModal .instr-icon {
-  font-size: 1.25rem;
-  color: #2563eb;
+/* ================= BODY ================= */
+
+#instructionsModal .instructions-body {
+  max-height: 380px;
+  overflow-y: auto;
+  padding: 18px 22px 6px;
 }
 
-/* ============================================================
-   INSTRUCTION GRID — Smaller & Centered
-   ============================================================ */
+/* Scrollbar (subtle) */
+#instructionsModal .instructions-body::-webkit-scrollbar {
+  width: 8px;
+}
+#instructionsModal .instructions-body::-webkit-scrollbar-thumb {
+  background: rgba(30,58,138,0.25);
+  border-radius: 10px;
+}
+#instructionsModal .instructions-body::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+/* Grid layout */
 #instructionsModal .instructions-grid {
-  padding: 20px 22px;
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); /* ⭐ Reduced width */
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
   gap: 14px;
 }
 
 /* Instruction card */
 #instructionsModal .instruction-card {
-  padding: 14px 16px;              /* Smaller */
-  border-radius: 14px;
-  background: #fafbfc;
-  border: 1px solid rgba(0,0,0,0.05);
-  box-shadow: 0 3px 10px rgba(0,0,0,0.06);
   display: flex;
+  align-items: flex-start;
   gap: 12px;
-  transition: all .25s ease;
+  padding: 14px 16px;
+  background: rgba(255,255,255,0.9);
+  border: 1px solid rgba(15,23,42,0.08);
+  border-radius: 14px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
 }
-#instructionsModal .instruction-card p {
-  font-size: 0.95rem;
-  margin: 0;
-  line-height: 1.4;
+
+#instructionsModal .instruction-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 24px rgba(0,0,0,0.1);
 }
+
+/* Danger rule */
 #instructionsModal .instruction-card.danger {
-  background: #fff1f1;
+  background: linear-gradient(180deg, #fee2e2, #fff5f5);
   border-color: #fca5a5;
 }
 
-/* ============================================================
-   FOOTER BUTTONS — Smaller & centered
-   ============================================================ */
+/* Icon */
+#instructionsModal .instr-icon {
+  font-size: 1.25rem;
+  color: #2563eb;
+  flex-shrink: 0;
+}
+#instructionsModal .instruction-card.danger .instr-icon {
+  color: #dc2626;
+}
+
+/* Text */
+#instructionsModal .instruction-card p {
+  margin: 0;
+  font-size: 0.95rem;
+  color: #1e293b;
+  line-height: 1.45;
+}
+
+/* ================= FOOTER ================= */
+
 #instructionsModal .modal-foot {
   padding: 18px 22px;
+  border-top: 1px solid rgba(15,23,42,0.08);
   display: flex;
   justify-content: space-between;
   align-items: center;
-  border-top: 1px solid rgba(0,0,0,0.06);
 }
 
+/* Buttons */
 #instructionsModal .btn-primary,
 #instructionsModal .btn-secondary {
   padding: 10px 16px;
@@ -464,21 +522,65 @@
   border-radius: 10px;
 }
 
-/* Close button */
+/* ================= CLOSE BUTTON ================= */
+
 #instructionsModal .modern-close {
-  width: 34px;
-  height: 34px;
+  position: absolute;
   top: 10px;
   right: 10px;
+  width: 34px;
+  height: 34px;
+  background: #f3f4f6;
+  border: none;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #64748b;
   font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.25s ease;
 }
 
-/* Prevent modal push-jump on hide */
+#instructionsModal .modern-close:hover {
+  background: #dc2626;
+  color: #fff;
+  box-shadow: 0 4px 12px rgba(220,38,38,0.3);
+}
+
+/* ================= MOBILE ================= */
+
+@media (max-width: 640px) {
+  #instructionsModal .modern-instr-card {
+    width: 95%;
+  }
+
+  #instructionsModal .instruction-card {
+    padding: 12px;
+  }
+
+  #instructionsModal .instruction-card p {
+    font-size: 0.9rem;
+  }
+
+  #instructionsModal .exam-duration-badge {
+    font-size: 0.8rem;
+    padding: 4px 10px;
+  }
+}
+
+
+
+/* ============================================================
+   INSTRUCTIONS MODAL — VERY SUBTLE LIFT (FINAL)
+============================================================ */
+
 #instructionsModal {
-  position: fixed !important;
-  top: 0; left: 0;
-  width: 100%;
-  height: 100%;
+  align-items: center;      /* keep true center */
+}
+
+#instructionsModal .modern-instr-card {
+  transform: translateY(-20px); /* gentle but noticeable lift */
 }
 
 
@@ -787,4 +889,107 @@
     text-align: center;
     font-weight: 700;
     color: #1e3a8a;
+}
+
+
+
+
+/* --------------------------------------------------
+   FLAG BUTTON STATES
+-------------------------------------------------- */
+.flag-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border-radius: 999px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  background: #f1f5f9;
+  color: #334155;
+  transition: all 0.25s ease;
+}
+
+.flag-btn:hover {
+  background: #fee2e2;
+  color: #b91c1c;
+}
+
+.flag-btn.flagged {
+  background: linear-gradient(135deg, #ef4444, #dc2626);
+  color: #fff;
+  box-shadow: 0 6px 18px rgba(239, 68, 68, 0.45);
+}
+
+
+
+/* ============================================================
+   EXAM FLASH — SAFE (NO FOCUS, NO CLICK)
+============================================================ */
+.exam-flash {
+  position: fixed;
+  top: 90px;
+  left: 50%;
+  transform: translateX(-50%) translateY(-10px);
+
+  padding: 14px 22px;
+  border-radius: 14px;
+
+  font-size: 0.95rem;
+  font-weight: 700;
+
+  opacity: 0;
+  transition: all 0.3s ease;
+
+  z-index: 99999;
+  pointer-events: none; /* 🔒 CRITICAL */
+}
+
+.exam-flash.show {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+.exam-flash-success {
+  background: linear-gradient(135deg, #22c55e, #16a34a);
+  color: #fff;
+}
+
+.exam-flash-info {
+  background: linear-gradient(135deg, #38bdf8, #0284c7);
+  color: #fff;
+}
+
+
+
+/* ======================================================
+   SIDEBAR HINT BUTTON — RED ALERT STYLE (NON-INTERACTIVE)
+====================================================== */
+.btn-hint {
+  background: linear-gradient(135deg, #dc2626, #b91c1c); /* rich red */
+  border: 1px solid rgba(220,38,38,0.6);
+
+  color: #ffffff;              /* ✅ clear white text */
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+
+  padding: 0.55rem 0.75rem;
+  border-radius: 10px;
+
+  text-align: center;
+  line-height: 1.35;
+
+  cursor: default;
+  user-select: none;
+
+  box-shadow:
+    0 4px 10px rgba(220,38,38,0.25),
+    inset 0 1px 0 rgba(255,255,255,0.15);
+}
+
+/* Fully non-interactive */
+.btn-hint:disabled {
+  pointer-events: none;
+  opacity: 1; /* ❗ stay bold, not faded */
 }

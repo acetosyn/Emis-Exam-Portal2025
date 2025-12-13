@@ -227,10 +227,19 @@
         <div id="questionGridWrap">
           <div id="questionGrid" class="question-grid"></div>
         </div>
+<button onclick="showSummary()" class="btn-secondary small w-full">
+  Review Summary
+</button>
 
-        <button onclick="showSummary()" class="btn-secondary small w-full">Review Summary</button>
-        <button onclick="endExam()" class="btn-danger small w-full">End Exam</button>
-      </div>
+<button
+  class="btn-hint small w-full"
+  type="button"
+  disabled
+  aria-disabled="true"
+>
+  Scroll to last question to submit exam
+</button>
+
 
       <div class="sidebar-footer">
         <p class="muted small">Use ← → keys to navigate</p>

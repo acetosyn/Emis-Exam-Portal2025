@@ -58,22 +58,52 @@ function formatTime(sec){
 }
 
 // Optional flash helper (uses #examFlash or #flashMessage if present)
+// ------------------------------------------------------
+// SAFE EXAM FLASH — NO ALERT (ANTI-CHEAT FRIENDLY)
+// ------------------------------------------------------
 function examFlash(message, type = "info") {
-  const flashEl =
+  let flashEl =
     document.getElementById("examFlashMessage") ||
     document.getElementById("examFlash") ||
     document.getElementById("flashMessage");
 
-  if (flashEl) {
-    flashEl.textContent = message;
-    flashEl.classList.add("show");
-    flashEl.dataset.type = type;
-    setTimeout(() => {
-      flashEl.classList.remove("show");
-    }, 5000);
-  } else {
-    alert(message);
+  // --------------------------------------------------
+  // Auto-create flash container if missing (SAFE)
+  // --------------------------------------------------
+  if (!flashEl) {
+    flashEl = document.createElement("div");
+    flashEl.id = "examFlash";
+    flashEl.className = "exam-flash";
+    flashEl.setAttribute("aria-hidden", "true");
+    document.body.appendChild(flashEl);
   }
+
+  // --------------------------------------------------
+  // Set message & style
+  // --------------------------------------------------
+  flashEl.textContent = message;
+
+  // Reset classes first
+  flashEl.classList.remove(
+    "exam-flash-info",
+    "exam-flash-success",
+    "exam-flash-warning",
+    "exam-flash-danger",
+    "show"
+  );
+
+  // Apply type class
+  flashEl.classList.add(`exam-flash-${type}`, "show");
+
+  // 🔒 CRITICAL: prevent click / focus / anti-cheat strike
+  flashEl.style.pointerEvents = "none";
+
+  // --------------------------------------------------
+  // Auto-dismiss (no interaction)
+  // --------------------------------------------------
+  setTimeout(() => {
+    flashEl.classList.remove("show");
+  }, 2600);
 }
 
 // Parse instruction text into {title, body, raw}
@@ -396,7 +426,7 @@ window.closeEndExam = () => {
 };
 
 // ------------------------------------------------------
-// SUBMIT EXAM — now sends RAW SCORE for notifications
+// SUBMIT EXAM — now sends RAW SCORE + FLAGGED QUESTIONS
 // ------------------------------------------------------
 window.submitExam = async function (timeUp = false) {
   if (window.__examFinished) return;
@@ -419,18 +449,33 @@ window.submitExam = async function (timeUp = false) {
   const incorrect = total - correct;
   const skipped   = total - answered;
 
-  // ⭐ RAW SCORE (NO PERCENT)
+  // ------------------------------------------------------
+  // ⭐ RAW SCORE
+  // ------------------------------------------------------
   const rawScore = correct;
+
+  // ------------------------------------------------------
+  // 🚩 COLLECT FLAGGED QUESTIONS (NEW)
+  // ------------------------------------------------------
+  const flaggedQuestionsDetailed = [...window.flaggedQuestions].map(i => {
+    const q = window.examData.questions[i];
+    return {
+      index: i,
+      question_id: q.id,
+      question: q.question
+    };
+  });
 
   const payload = {
     subject: $('meta[name="exam-subject"]').content.trim().toUpperCase(),
-    score: rawScore,  // RAW SCORE HERE
+    score: rawScore,
     correct,
     incorrect,
     total,
     answered,
     skipped,
-    flagged: window.flaggedQuestions.size,
+    flagged: flaggedQuestionsDetailed.length,
+    flagged_questions: flaggedQuestionsDetailed,
     tabSwitches: window.__TAB_STRIKES || 0,
     time_taken: window.examStartTime
       ? Math.round((Date.now() - window.examStartTime) / 1000)
@@ -440,7 +485,7 @@ window.submitExam = async function (timeUp = false) {
   };
 
   // ---------------------------------------------
-  // 🔔 SEND REAL-TIME NOTIFICATION: Exam End
+  // 🔔 REAL-TIME NOTIFICATION: Exam End
   // ---------------------------------------------
   try {
     const notifyBody = {
@@ -448,8 +493,9 @@ window.submitExam = async function (timeUp = false) {
       admission_number: document.querySelector('meta[name="student-admission"]')?.content || "",
       class_category: document.querySelector('meta[name="student-class"]')?.content || "",
       subject: payload.subject,
-      score: rawScore,      // RAW SCORE!
+      score: rawScore,
       total_questions: total,
+      flagged: flaggedQuestionsDetailed.length,
       year: document.querySelector('meta[name="exam-year"]')?.content || "",
       submitted_at: payload.submittedAt,
       status: payload.status
@@ -496,7 +542,15 @@ window.loadQuestion = function (i) {
     return;
   }
 
+  // Set current question index
   window.currentQuestionIndex = i;
+
+  // ------------------------------------------------------
+  // 🚩 SYNC FLAG BUTTON STATE (NEW)
+  // ------------------------------------------------------
+  if (typeof updateFlagUI === "function") {
+    updateFlagUI(window.flaggedQuestions.has(i));
+  }
 
   // ------------------------------------------------------
   // REAL QUESTION NUMBER (1-based)
@@ -521,7 +575,9 @@ window.loadQuestion = function (i) {
 
   function convertBlanks(text) {
     if (!text) return text;
-    return text.replace(/_{3,}\s*(\d+)/g, (_, num) => `<span class="gap">${num}</span>`);
+    return text.replace(/_{3,}\s*(\d+)/g, (_, num) =>
+      `<span class="gap">${num}</span>`
+    );
   }
 
   // ------------------------------------------------------
@@ -551,9 +607,9 @@ window.loadQuestion = function (i) {
   let sectionHTML = "";
   const sec = window.sectionInstructions[i];
 
-  // detect if this exam is literature
   const subjectMeta = document.querySelector('meta[name="exam-subject"]');
-  const isLiterature = subjectMeta && subjectMeta.content.toLowerCase().includes("literature");
+  const isLiterature =
+    subjectMeta && subjectMeta.content.toLowerCase().includes("literature");
 
   if (sec) {
     const titleHTML = sec.title
@@ -564,7 +620,6 @@ window.loadQuestion = function (i) {
       ? `<div class="section-instr-body">${convertBlanks(applyHighlight(sec.body))}</div>`
       : "";
 
-    // ⭐ LITERATURE ONLY: Inject passage INTO instruction card
     let passageHTML = "";
     if (isLiterature && q.passage) {
       passageHTML = `
@@ -590,7 +645,8 @@ window.loadQuestion = function (i) {
   if (q.diagram) {
     diagramHTML = `
       <div class="question-diagram mb-4">
-        <img src="${q.diagram}" class="diagram-img" style="max-width:100%; border-radius:6px;">
+        <img src="${q.diagram}" class="diagram-img"
+             style="max-width:100%; border-radius:6px;">
       </div>
     `;
   }
@@ -598,7 +654,7 @@ window.loadQuestion = function (i) {
   // ------------------------------------------------------
   // OPTIONS RENDERING
   // ------------------------------------------------------
-  const html = (q.options || []).map((opt, idx) => {
+  const optionsHTML = (q.options || []).map((opt, idx) => {
     const cleanOpt = stripLabel(opt);
     const letter   = String.fromCharCode(65 + idx);
 
@@ -620,15 +676,16 @@ window.loadQuestion = function (i) {
     <div class="qa-slide fade-in-up">
       ${diagramHTML}
       ${sectionHTML}
-      <h3 class="text-xl font-medium mb-4">${applyHighlight(q.question)}</h3>
-
+      <h3 class="text-xl font-medium mb-4">
+        ${applyHighlight(q.question)}
+      </h3>
       <div class="space-y-3">
-        ${html}
+        ${optionsHTML}
       </div>
     </div>
   `;
 
-  // Bind selection
+  // Bind option selection
   $$(".option-btn").forEach(btn => {
     btn.onclick = () => selectOption(Number(btn.dataset.optionIndex));
   });
@@ -797,5 +854,109 @@ document.addEventListener("DOMContentLoaded", () => {
     startBtn.addEventListener("click", () => {
       window.startExam();
     });
+  }
+});
+
+
+
+// ------------------------------------------------------
+// FLAG QUESTION — SAFE, NON-INTRUSIVE, ANTI-CHEAT FRIENDLY
+// ------------------------------------------------------
+window.toggleFlag = function () {
+  const qIndex = window.currentQuestionIndex;
+  if (qIndex == null) return;
+
+  // Prevent multiple flag toggles per question
+  if (window.flaggedQuestions.has(qIndex)) {
+    examFlash("⚠️ This question is already flagged.", "info");
+    return;
+  }
+
+  // Store flag
+  window.flaggedQuestions.add(qIndex);
+
+  // Visual update
+  updateFlagUI(true);
+
+  // SAFE in-page notification
+  examFlash(
+    "🚩 Your teacher has been notified of this question.",
+    "success"
+  );
+
+  // Optional: auto-reset button text after flash
+  setTimeout(() => {
+    updateFlagUI(false);
+  }, 2800);
+};
+
+function updateFlagUI(isFlagged) {
+  const btn = document.getElementById("flagBtn");
+  const txt = document.getElementById("flagText");
+
+  if (!btn || !txt) return;
+
+  if (isFlagged) {
+    btn.classList.add("flagged");
+    txt.textContent = "Flagged";
+  } else {
+    btn.classList.remove("flagged");
+    txt.textContent = "Flag";
+  }
+}
+
+
+
+
+function updateFlagUI(isFlagged) {
+  const btn = document.getElementById("flagBtn");
+  const txt = document.getElementById("flagText");
+
+  if (!btn || !txt) return;
+
+  if (isFlagged) {
+    btn.classList.add("flagged");
+    txt.textContent = "Flagged";
+  } else {
+    btn.classList.remove("flagged");
+    txt.textContent = "Flag";
+  }
+}
+
+
+
+// ------------------------------------------------------
+// KEYBOARD NAVIGATION — ← PREV | → NEXT (ANTI-CHEAT SAFE)
+// ------------------------------------------------------
+document.addEventListener("keydown", (e) => {
+
+  // Only when exam is active
+  if (!window.examStarted || window.__examFinished) return;
+
+  // Do NOT hijack typing inside inputs / textareas
+  const tag = e.target.tagName;
+  if (tag === "INPUT" || tag === "TEXTAREA") return;
+
+  const real = window.realQuestionIndices;
+  if (!real || !real.length) return;
+
+  const pos = real.indexOf(window.currentQuestionIndex);
+
+  // LEFT ARROW → Previous Question (always allowed)
+  if (e.key === "ArrowLeft") {
+    e.preventDefault();
+    window.previousQuestion();
+  }
+
+  // RIGHT ARROW → Next Question (BLOCK on last question)
+  if (e.key === "ArrowRight") {
+    e.preventDefault();
+
+    // 🚫 If this is the LAST real question → do NOTHING
+    if (pos === real.length - 1) {
+      return; // stay on last question
+    }
+
+    window.nextQuestion();
   }
 });

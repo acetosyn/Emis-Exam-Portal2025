@@ -128,14 +128,15 @@ async function loadResults() {
 }
 
 /* ============================================================================
-   RENDER TABLE — FULL PREMIUM BADGE SYSTEM
+   RENDER TABLE — PREMIUM BADGES + EXCELLENCE + HOVER ANIM
 ============================================================================ */
 /* ============================================================================
    RENDER TABLE — PREMIUM BADGES + EXCELLENCE + HOVER ANIM
 ============================================================================ */
 function renderTable() {
     if (!FILTERED.length) {
-        resultsBody.innerHTML = `<tr><td colspan="9" class="no-data">No results match your search</td></tr>`;
+        resultsBody.innerHTML =
+            `<tr><td colspan="9" class="no-data">No results match your search</td></tr>`;
         pagination.innerHTML = "";
         return;
     }
@@ -153,17 +154,18 @@ function renderTable() {
             10
         );
 
-        const correct = row["Correct"] !== undefined ? row["Correct"] : "";
-        const total   = row["Total"]   !== undefined ? row["Total"]   : "";
+        const correct = row["Correct"] ?? "";
+        const total   = row["Total"]   ?? "";
 
-        const rawBadge = (correct !== "" && total !== "")
-            ? `<span class="badge-raw">${correct}/${total}</span>`
-            : `<span class="badge-raw">--/--</span>`;
+        const rawBadge =
+            (correct !== "" && total !== "")
+                ? `<span class="badge-raw">${correct}/${total}</span>`
+                : `<span class="badge-raw">--/--</span>`;
 
-        // Excellence badge for >= 80%
-        const excellenceBadge = numericPercent >= 80
-            ? `<span class="badge-excellence">★ Excellent</span>`
-            : "";
+        const excellenceBadge =
+            numericPercent >= 80
+                ? `<span class="badge-excellence">★ Excellent</span>`
+                : "";
 
         // -------------------------------
         // CLASS + SUBJECT SOFT BADGES
@@ -171,15 +173,14 @@ function renderTable() {
         const classLabel   = row["Class"]   || "";
         const subjectLabel = row["Subject"] || "";
 
-        const classCell   = classLabel
-            ? `<span class="badge-soft">${classLabel}</span>`
-            : "";
-        const subjectCell = subjectLabel
-            ? `<span class="badge-soft">${subjectLabel}</span>`
-            : "";
+        const classCell =
+            classLabel ? `<span class="badge-soft">${classLabel}</span>` : "";
+
+        const subjectCell =
+            subjectLabel ? `<span class="badge-soft">${subjectLabel}</span>` : "";
 
         // -------------------------------
-        // STATUS PILL (PASS / FAIL)
+        // STATUS PILL
         // -------------------------------
         const isPass      = String(row["Status"]).toUpperCase() === "PASS";
         const statusClass = isPass ? "status-pill status-pass" : "status-pill status-fail";
@@ -187,7 +188,12 @@ function renderTable() {
         const statusText  = row["Status"] || (isPass ? "PASS" : "FAIL");
 
         return `
-        <tr class="fade-row results-row">
+        <tr class="fade-row results-row"
+            data-admission="${row["Admission No"] || ""}"
+            data-subject="${row["Subject"] || ""}"
+            data-class="${row["Class"] || ""}"
+            data-year="${row["Year"] || yearSelector.value || ""}">
+
             <td><input type="checkbox" class="row-check"></td>
             <td>${row["Student Name"] || ""}</td>
             <td>${row["Admission No"] || ""}</td>
@@ -224,6 +230,7 @@ function renderTable() {
 
     renderPagination();
 }
+
 
 /* ============================================================================
    PAGINATION — UNCHANGED
@@ -367,23 +374,38 @@ function closeDeleteModal() {
 window.closeDeleteModal = closeDeleteModal;
 
 /* ============================================================================
-   CONFIRM DELETE — UPDATED FOR YEAR + COUNT MESSAGE
+   CONFIRM DELETE — BACKEND-COMPATIBLE (FIXED FOR SEARCH + FILTER)
 ============================================================================ */
 confirmDeleteBtn.addEventListener("click", async () => {
     const checks = document.querySelectorAll(".row-check:checked");
     if (!checks.length) return closeDeleteModal();
 
+    // Use FIRST selected row to determine FILE LOCATION
+    const firstRow = checks[0].closest("tr");
+
+    const year  = firstRow.dataset.year || yearSelector.value.trim();
+    const cls   = firstRow.dataset.class || classSelector.value.trim().toUpperCase();
+    const subj  = firstRow.dataset.subject || subjectSelector.value.trim();
+
+    if (!year || !cls || !subj) {
+        showToast("Unable to determine Year / Class / Subject.", "error");
+        return;
+    }
+
+    // 🔑 BACKEND-EXPECTED DELETE FORMAT
+    const deleteItems = Array.from(checks).map(chk => {
+        const tr = chk.closest("tr");
+        return {
+            "Student Name": tr.children[1].textContent.trim(),
+            "Admission No": tr.children[2].textContent.trim()
+        };
+    });
+
     const payload = {
-        year: yearSelector.value.trim(),
-        class_category: classSelector.value.trim().toUpperCase(),
-        subject: subjectSelector.value.trim().toUpperCase(),
-        delete_items: Array.from(checks).map(chk => {
-            const tr = chk.closest("tr");
-            return {
-                "Student Name": tr.children[1].textContent.trim(),
-                "Admission No": tr.children[2].textContent.trim()
-            };
-        })
+        year: year,
+        class_category: cls,
+        subject: subj,
+        delete_items: deleteItems
     };
 
     try {
@@ -395,28 +417,44 @@ confirmDeleteBtn.addEventListener("click", async () => {
 
         const out = await res.json();
 
-        if (out.status === "ok") {
+        if (res.ok && out.status === "ok") {
 
-            // ⭐ New: Dynamic delete message
-            const deletedCount = checks.length;
-            const msg =
-                deletedCount === 1
-                    ? "1 result deleted ✔"
-                    : `${deletedCount} results deleted ✔`;
-
-            showToast(msg, "success");
+            const count = deleteItems.length;
+            showToast(
+                count === 1
+                    ? "1 result deleted successfully ✔"
+                    : `${count} results deleted successfully ✔`,
+                "success"
+            );
 
             closeDeleteModal();
-            loadResults();
+
+            // 🔄 REMOVE LOCALLY (NO GHOST ROWS)
+            deleteItems.forEach(item => {
+                RESULTS = RESULTS.filter(r =>
+                    !(
+                        String(r["Student Name"]).trim() === item["Student Name"] &&
+                        String(r["Admission No"]).trim() === item["Admission No"]
+                    )
+                );
+            });
+
+            FILTERED = [...RESULTS];
+            CURRENT_PAGE = 1;
+
+            renderTable();
+            updateAnalytics();
+
         } else {
-            showToast("Delete failed.", "error");
+            showToast(out.error || "Delete failed.", "error");
         }
 
     } catch (err) {
-        console.error(err);
+        console.error("Delete error:", err);
         showToast("Server error during deletion.", "error");
     }
 });
+
 
 
 /* ============================================================================
