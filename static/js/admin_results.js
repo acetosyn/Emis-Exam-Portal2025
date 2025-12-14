@@ -358,6 +358,28 @@ selectAllRows.addEventListener("change", () => {
     document.querySelectorAll(".row-check").forEach(c => c.checked = selectAllRows.checked);
 });
 
+function setDeleteLoading(isLoading) {
+    const btn = confirmDeleteBtn;
+    if (!btn) return;
+
+    const text = btn.querySelector(".btn-text");
+    const spinner = btn.querySelector(".btn-spinner");
+
+    if (isLoading) {
+        btn.classList.add("loading");
+        if (text) text.textContent = "Deleting…";
+        if (spinner) spinner.classList.remove("hidden");
+    } else {
+        btn.classList.remove("loading");
+        if (text) text.textContent = "Delete";
+        if (spinner) spinner.classList.add("hidden");
+    }
+}
+
+
+
+
+
 /* ============================================================================
    DELETE MODAL — UNCHANGED
 ============================================================================ */
@@ -380,6 +402,9 @@ confirmDeleteBtn.addEventListener("click", async () => {
     const checks = document.querySelectorAll(".row-check:checked");
     if (!checks.length) return closeDeleteModal();
 
+    // 🔄 Start loading spinner
+    setDeleteLoading(true);
+
     // Use FIRST selected row to determine FILE LOCATION
     const firstRow = checks[0].closest("tr");
 
@@ -389,10 +414,10 @@ confirmDeleteBtn.addEventListener("click", async () => {
 
     if (!year || !cls || !subj) {
         showToast("Unable to determine Year / Class / Subject.", "error");
+        setDeleteLoading(false);
         return;
     }
 
-    // 🔑 BACKEND-EXPECTED DELETE FORMAT
     const deleteItems = Array.from(checks).map(chk => {
         const tr = chk.closest("tr");
         return {
@@ -402,7 +427,7 @@ confirmDeleteBtn.addEventListener("click", async () => {
     });
 
     const payload = {
-        year: year,
+        year,
         class_category: cls,
         subject: subj,
         delete_items: deleteItems
@@ -417,43 +442,52 @@ confirmDeleteBtn.addEventListener("click", async () => {
 
         const out = await res.json();
 
-        if (res.ok && out.status === "ok") {
+        // ⏳ Keep spinner visible briefly for clarity (UX polish)
+        setTimeout(() => {
 
-            const count = deleteItems.length;
-            showToast(
-                count === 1
-                    ? "1 result deleted successfully ✔"
-                    : `${count} results deleted successfully ✔`,
-                "success"
-            );
+            setDeleteLoading(false);
 
-            closeDeleteModal();
+            if (res.ok && out.status === "ok") {
 
-            // 🔄 REMOVE LOCALLY (NO GHOST ROWS)
-            deleteItems.forEach(item => {
-                RESULTS = RESULTS.filter(r =>
-                    !(
-                        String(r["Student Name"]).trim() === item["Student Name"] &&
-                        String(r["Admission No"]).trim() === item["Admission No"]
-                    )
+                const count = deleteItems.length;
+                showToast(
+                    count === 1
+                        ? "1 result deleted successfully ✔"
+                        : `${count} results deleted successfully ✔`,
+                    "success"
                 );
-            });
 
-            FILTERED = [...RESULTS];
-            CURRENT_PAGE = 1;
+                closeDeleteModal();
 
-            renderTable();
-            updateAnalytics();
+                // 🔄 Remove rows locally
+                deleteItems.forEach(item => {
+                    RESULTS = RESULTS.filter(r =>
+                        !(
+                            String(r["Student Name"]).trim() === item["Student Name"] &&
+                            String(r["Admission No"]).trim() === item["Admission No"]
+                        )
+                    );
+                });
 
-        } else {
-            showToast(out.error || "Delete failed.", "error");
-        }
+                FILTERED = [...RESULTS];
+                CURRENT_PAGE = 1;
+
+                renderTable();
+                updateAnalytics();
+
+            } else {
+                showToast(out.error || "Delete failed.", "error");
+            }
+
+        }, 1200); // smooth delay (feels intentional, not slow)
 
     } catch (err) {
         console.error("Delete error:", err);
+        setDeleteLoading(false);
         showToast("Server error during deletion.", "error");
     }
 });
+
 
 
 

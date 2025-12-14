@@ -1042,3 +1042,44 @@
 .toast-warning {
   background: linear-gradient(135deg, #f59e0b, #d97706);
 }
+
+
+
+/* ============================================================
+   DELETE BUTTON LOADING SPINNER
+============================================================ */
+#confirmDeleteBtn {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+/* Spinner circle */
+#confirmDeleteBtn .btn-spinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(255,255,255,0.4);
+  border-top-color: #ffffff;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+/* Hide helper */
+.hidden {
+  display: none !important;
+}
+
+/* Rotation */
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Disabled visual */
+#confirmDeleteBtn.loading {
+  opacity: 0.85;
+  pointer-events: none;
+}
